@@ -16,7 +16,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
-    Long id;
+    Integer id;
 
     @Column(nullable = false, length = 50)
     String name;
@@ -33,6 +33,6 @@ public class Category {
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return id != null ? id : 0;
     }
 }

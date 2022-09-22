@@ -3,7 +3,6 @@ package ru.practicum.ewmmain.user.model;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -17,9 +16,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
-    Long id;
+    Integer id;
 
-    @NotBlank
     @Column(length = 50, nullable = false)
     String name;
 
@@ -38,6 +36,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return id != null ? id : 0;
     }
 }

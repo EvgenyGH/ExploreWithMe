@@ -19,7 +19,7 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id")
-    Long id;
+    Integer id;
 
     @Column(nullable = false, length = 100)
     String annotation;
@@ -80,7 +80,7 @@ public class Event {
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return id != null ? id : 0;
     }
 }
 

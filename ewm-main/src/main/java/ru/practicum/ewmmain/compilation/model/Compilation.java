@@ -16,7 +16,7 @@ public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "compilation_id")
-    Long id;
+    Integer id;
 
     @Column(nullable = false)
     Boolean pinned;
@@ -36,6 +36,6 @@ public class Compilation {
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return id != null ? id : 0;
     }
 }

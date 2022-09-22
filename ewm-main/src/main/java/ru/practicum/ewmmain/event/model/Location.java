@@ -16,7 +16,7 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location_id")
-    Long id;
+    Integer id;
 
     @Column(nullable = false)
     Float latitude;
@@ -36,6 +36,6 @@ public class Location {
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return id != null ? id : 0;
     }
 }

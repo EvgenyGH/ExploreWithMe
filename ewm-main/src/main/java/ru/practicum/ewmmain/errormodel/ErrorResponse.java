@@ -1,12 +1,16 @@
 package ru.practicum.ewmmain.errormodel;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
+@Getter
 public class ErrorResponse {
     //Список стектрейсов или описания ошибок
-    List<StackTraceElement> errors;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    StackTraceElement[] errors;
 
     //Сообщение об ошибке
     String message;
@@ -18,15 +22,14 @@ public class ErrorResponse {
     String status;
 
     //Дата и время когда произошла ошибка (в формате "yyyy-MM-dd HH:mm:ss")
-    LocalDateTime timestamp;
+    String timestamp;
 
-    public ErrorResponse(List<StackTraceElement> errors, String message, String reason,
+    public ErrorResponse(StackTraceElement[] errors, String message, String reason,
                          String status, LocalDateTime timestamp) {
         this.errors = errors;
         this.message = message;
         this.reason = reason;
         this.status = status;
-        this.timestamp = timestamp;
-        this.timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.timestamp = timestamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }
