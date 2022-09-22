@@ -3,7 +3,6 @@ package ru.practicum.ewmmain.user.model;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
@@ -24,8 +23,6 @@ public class User {
     @Column(length = 50, nullable = false)
     String name;
 
-    @Email
-    @NotBlank
     @Column(length = 50, nullable = false)
     String email;
 
