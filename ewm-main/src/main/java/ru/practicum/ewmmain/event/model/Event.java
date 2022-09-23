@@ -19,54 +19,54 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id")
-    Integer id;
+    private Integer id;
 
-    @Column(nullable = false, length = 100)
-    String annotation;
-
-    @Column(nullable = false)
-    LocalDateTime created;
-
-    @Column(nullable = false, length = 200)
-    String description;
+    @Column(nullable = false, length = 2000)
+    private String annotation;
 
     @Column(nullable = false)
-    LocalDateTime eventDate;
+    private LocalDateTime created;
+
+    @Column(nullable = false, length = 7000)
+    private String description;
+
+    @Column(nullable = false)
+    private LocalDateTime eventDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator_id")
-    User initiator;
+    private User initiator;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
-    Location location;
+    private Location location;
 
     @Column(nullable = false)
-    Boolean paid;
+    private Boolean paid;
 
     @Column(name = "participant_limit", nullable = false)
-    Integer participantLimit;
+    private Integer participantLimit;
 
     @Column(nullable = false)
-    LocalDateTime published;
+    private LocalDateTime published;
 
     @Column(name = "request_moderation", nullable = false)
-    Boolean requestModeration;
+    private Boolean requestModeration;
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
-    State state;
+    private State state;
 
     @Column(nullable = false, length = 50)
-    String title;
+    private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "compilation_id")
-    Compilation compilation;
+    private Compilation compilation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
-    Category category;
+    private Category category;
 
     @Override
     public boolean equals(Object o) {

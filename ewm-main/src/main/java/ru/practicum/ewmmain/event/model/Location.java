@@ -3,6 +3,7 @@ package ru.practicum.ewmmain.event.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -16,13 +17,15 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location_id")
-    Integer id;
+    private Integer id;
 
+    @NotNull
     @Column(nullable = false)
-    Float latitude;
+    private Float latitude;
 
+    @NotNull
     @Column(nullable = false)
-    Float longitude;
+    private Float longitude;
 
     @Override
     public boolean equals(Object o) {

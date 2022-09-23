@@ -19,21 +19,21 @@ public class ParticipationRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "request_id")
-    Integer id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
-    Event event;
+    private Event event;
 
     @Column(nullable = false)
-    LocalDateTime created;
+    private LocalDateTime created;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    User requester;
+    private User requester;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    Status status;
+    private Status status;
 
     @Override
     public boolean equals(Object o) {

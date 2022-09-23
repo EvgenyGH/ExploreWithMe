@@ -16,13 +16,13 @@ public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "compilation_id")
-    Integer id;
+    private Integer id;
 
     @Column(nullable = false)
-    Boolean pinned;
+    private Boolean pinned;
 
     @Column(nullable = false, length = 50)
-    String title;
+    private String title;
 
     @Override
     public boolean equals(Object o) {

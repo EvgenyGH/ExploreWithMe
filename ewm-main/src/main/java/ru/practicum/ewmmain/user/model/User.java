@@ -16,13 +16,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
-    Integer id;
+    private Integer id;
 
     @Column(length = 50, nullable = false)
-    String name;
+    private String name;
 
     @Column(length = 50, nullable = false)
-    String email;
+    private String email;
 
     @Override
     public boolean equals(Object o) {

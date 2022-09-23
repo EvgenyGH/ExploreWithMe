@@ -16,10 +16,10 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
-    Integer id;
+    private Integer id;
 
     @Column(nullable = false, length = 50)
-    String name;
+    private String name;
 
     @Override
     public boolean equals(Object o) {

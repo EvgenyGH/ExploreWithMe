@@ -9,8 +9,8 @@ import java.io.Serializable;
 @Data
 public class UserDto implements Serializable {
     @NotBlank
-    private final String name;
+    private String name;
     @NotBlank
     @Email
-    private final String email;
+    private String email;
 }
