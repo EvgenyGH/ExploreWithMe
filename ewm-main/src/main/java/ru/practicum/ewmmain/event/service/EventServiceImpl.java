@@ -1,5 +1,6 @@
 package ru.practicum.ewmmain.event.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewmmain.event.controller.Sort;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class EventServiceImpl implements EventService{
     @Override
     public List<EventDtoShort> getEvents(String text, List<Integer> categories, Boolean paid,

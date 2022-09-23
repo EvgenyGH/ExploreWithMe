@@ -21,7 +21,7 @@ public class Compilation {
     @Column(nullable = false)
     private Boolean pinned;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 100)
     private String title;
 
     @Override

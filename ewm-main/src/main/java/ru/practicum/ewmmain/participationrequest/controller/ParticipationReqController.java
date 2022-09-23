@@ -1,6 +1,7 @@
 package ru.practicum.ewmmain.participationrequest.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewmmain.participationrequest.model.ParticipationRequestDto;
 import ru.practicum.ewmmain.participationrequest.service.ParticipationReqService;
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
+@Validated
 public class ParticipationReqController {
     private final ParticipationReqService service;
 
