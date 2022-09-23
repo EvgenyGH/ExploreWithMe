@@ -1,5 +1,6 @@
 package ru.practicum.ewmmain.event.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewmmain.event.controller.Sort;
 import ru.practicum.ewmmain.event.model.*;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 public class EventServiceImpl implements EventService{
     @Override
     public List<EventDtoShort> getEvents(String text, List<Integer> categories, Boolean paid,
