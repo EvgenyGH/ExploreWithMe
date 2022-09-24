@@ -8,12 +8,3 @@ CREATE TABLE IF NOT EXISTS statistics
     timestamp  timestamp    NOT NULL,
     uri        varchar(200) NOT NULL
 );
-
-CREATE OR REPLACE FUNCTION count_unique(app varchar, uri varchar,
-start_time timestamp, end_time timestamp) RETURNS integer AS
-'SELECT count(distinct s.ip)
-FROM statistics AS s
-WHERE s.app = $1
-AND s.uri = $2
-AND s.timestamp BETWEEN $3 AND $4;'
-LANGUAGE SQL;

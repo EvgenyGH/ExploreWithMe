@@ -47,7 +47,7 @@ public class EventController {
                                   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
                                   LocalDateTime rangeEnd,
                                   @RequestParam(required = false, defaultValue = "false") Boolean onlyAvailable,
-                                  @RequestParam @NotNull Sort sort,
+                                  @RequestParam(name = "sort") @NotNull SortOption sort,
                                   @RequestParam(required = false, defaultValue = "0") @Min(0) Integer from,
                                   @RequestParam(required = false, defaultValue = "10") @NotNull @Min(0) Integer size,
                                   HttpServletRequest request) {
@@ -65,8 +65,8 @@ public class EventController {
 
     //Получение категорий.
     @GetMapping("/categories")
-    CategoryDto getCategories(@RequestParam(required = false, defaultValue = "0") @Min(0) Integer from,
-                              @RequestParam(required = false, defaultValue = "10") @Min(0) Integer size) {
+    List<CategoryDto> getCategories(@RequestParam(required = false, defaultValue = "0") @Min(0) Integer from,
+                                    @RequestParam(required = false, defaultValue = "10") @Min(0) Integer size) {
         return service.getCategories(from, size);
     }
 
@@ -130,7 +130,7 @@ public class EventController {
     //Редактирование события.
     //Валидация данных не требуется.
     @PutMapping("/admin/events/{eventId}")
-    EventDto updateEventAdmin(@RequestBody EventUpdateAdminDto eventUpdate, @PathVariable Integer eventId){
+    EventDto updateEventAdmin(@RequestBody EventUpdateAdminDto eventUpdate, @PathVariable Integer eventId) {
         return service.updateEventAdmin(eventId, eventUpdate);
     }
 
@@ -138,33 +138,33 @@ public class EventController {
     //Дата начала события должна быть не ранее чем за час от даты публикации.
     //Событие должно быть в состоянии ожидания публикации.
     @PatchMapping("/admin/events/{eventId}/publish")
-    EventDto publishEvent(@PathVariable @Min(0) Integer eventId){
+    EventDto publishEvent(@PathVariable @Min(0) Integer eventId) {
         return service.publishEvent(eventId);
     }
 
     //Отклонение события.
     //Событие не должно быть опубликовано.
     @PatchMapping("/admin/events/{eventId}/reject")
-    EventDto cancelEventAdmin(@PathVariable @Min(0) Integer eventId){
+    EventDto cancelEventAdmin(@PathVariable @Min(0) Integer eventId) {
         return service.cancelEventAdmin(eventId);
     }
 
     //Изменение категории.
     @PatchMapping("/admin/categories")
-    CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto){
+    CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
         return service.updateCategory(categoryDto);
     }
 
     //Добавление новой категории.
     @PostMapping("/admin/categories")
-    CategoryDto addCategory(@RequestBody @Valid CategoryNewDto categoryNewDto){
+    CategoryDto addCategory(@RequestBody @Valid CategoryNewDto categoryNewDto) {
         return service.addCategory(categoryNewDto);
     }
 
-    //17"DELETE /admin/categories/{catId} Удаление категории.
+    //Удаление категории.
     //С категорией не должно быть связано ни одного события.
     @DeleteMapping("/admin/categories/{catId}")
-    void deleteCategory(@PathVariable @Min(0) Integer catId){
+    void deleteCategory(@PathVariable @Min(0) Integer catId) {
         service.deleteCategory(catId);
     }
 }

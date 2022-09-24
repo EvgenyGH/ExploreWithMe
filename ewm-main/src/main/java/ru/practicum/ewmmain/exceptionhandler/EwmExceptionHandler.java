@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ru.practicum.ewmmain.errormodel.ErrorResponse;
+import ru.practicum.ewmmain.exception.CategoryNotFoundException;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
@@ -55,7 +56,7 @@ public class EwmExceptionHandler {
     }*/
 
     //404 NOT_FOUND Объект не найден
-    @ExceptionHandler(EmptyResultDataAccessException.class)
+    @ExceptionHandler({EmptyResultDataAccessException.class, CategoryNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     ErrorResponse notFoundHandler(Exception exception) {
         ErrorResponse response = new ErrorResponse(null,

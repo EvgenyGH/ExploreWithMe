@@ -2,21 +2,32 @@ package ru.practicum.ewmmain.event.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewmmain.event.controller.Sort;
+import ru.practicum.ewmmain.event.controller.SortOption;
 import ru.practicum.ewmmain.event.model.*;
+import ru.practicum.ewmmain.event.repository.CategoryRepository;
+import ru.practicum.ewmmain.event.repository.EventRepository;
+import ru.practicum.ewmmain.event.repository.LocationRepository;
+import ru.practicum.ewmmain.exception.CategoryNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class EventServiceImpl implements EventService{
+public class EventServiceImpl implements EventService {
+    private final EventRepository repository;
+    private final CategoryRepository catRepository;
+    private final LocationRepository locRepository;
+
     @Override
     public List<EventDtoShort> getEvents(String text, List<Integer> categories, Boolean paid,
                                          LocalDateTime rangeStart, LocalDateTime rangeEnd,
-                                         Boolean onlyAvailable, Sort sort, Integer from, Integer size,
+                                         Boolean onlyAvailable, SortOption sort, Integer from, Integer size,
                                          String ip, String uri) {
         return null;
     }
@@ -27,13 +38,23 @@ public class EventServiceImpl implements EventService{
     }
 
     @Override
-    public CategoryDto getCategories(Integer from, Integer size) {
-        return null;
+    public List<CategoryDto> getCategories(Integer from, Integer size) {
+        List<Category> categories = catRepository.findAll(
+                PageRequest.of(from / size, size, Direction.ASC, "name")).toList();
+
+        log.trace("{} Found {} categories: {}", LocalDateTime.now(), categories.size(), categories);
+
+        return categories.stream().map(CategoryDtoMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public CategoryDto getCategoryById(Integer catId) {
-        return null;
+        Category category = catRepository.findById(catId)
+                .orElseThrow(() -> new CategoryNotFoundException(String.format("Category id=%d not found.", catId)));
+
+        log.trace("{} Category id={} found: {}", LocalDateTime.now(), catId, category);
+
+        return CategoryDtoMapper.toDto(category);
     }
 
     @Override
@@ -85,16 +106,27 @@ public class EventServiceImpl implements EventService{
 
     @Override
     public CategoryDto updateCategory(CategoryDto categoryDto) {
-        return null;
+        catRepository.findById(categoryDto.getId());
+        Category category = catRepository.save(CategoryDtoMapper.toCategory(categoryDto));
+
+        log.trace("{} Category id={} updated: {}", LocalDateTime.now(), category.getId(), category);
+
+        return CategoryDtoMapper.toDto(category);
     }
 
     @Override
     public CategoryDto addCategory(CategoryNewDto categoryNewDto) {
-        return null;
+        Category category = catRepository.save(CategoryDtoMapper.toCategory(categoryNewDto));
+
+        log.trace("{} New category added: {}", LocalDateTime.now(), category);
+
+        return CategoryDtoMapper.toDto(category);
     }
 
     @Override
     public void deleteCategory(Integer catId) {
+        catRepository.deleteById(catId);
 
+        log.trace("{} Category id={} deleted", LocalDateTime.now(), catId);
     }
 }

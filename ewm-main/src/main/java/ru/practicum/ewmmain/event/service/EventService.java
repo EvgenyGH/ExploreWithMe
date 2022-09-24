@@ -1,6 +1,6 @@
 package ru.practicum.ewmmain.event.service;
 
-import ru.practicum.ewmmain.event.controller.Sort;
+import ru.practicum.ewmmain.event.controller.SortOption;
 import ru.practicum.ewmmain.event.model.*;
 
 import java.time.LocalDateTime;
@@ -9,12 +9,12 @@ import java.util.List;
 public interface EventService {
     List<EventDtoShort> getEvents(String text, List<Integer> categories, Boolean paid,
                                   LocalDateTime rangeStart, LocalDateTime rangeEnd,
-                                  Boolean onlyAvailable, Sort sort, Integer from,
+                                  Boolean onlyAvailable, SortOption sort, Integer from,
                                   Integer size, String ip, String uri);
 
     EventDto getEventById(Integer eventId, String ip, String uri);
 
-    CategoryDto getCategories(Integer from, Integer size);
+    List<CategoryDto> getCategories(Integer from, Integer size);
 
     CategoryDto getCategoryById(Integer catId);
 

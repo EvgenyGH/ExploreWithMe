@@ -1,3 +1,3 @@
 package ru.practicum.ewmmain.event.controller;
 
-public enum Sort {EVENT_DATE, VIEWS}
+public enum SortOption {EVENT_DATE, VIEWS}
