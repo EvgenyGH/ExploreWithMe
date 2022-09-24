@@ -45,7 +45,7 @@ public class EventDto implements Serializable {
     private UserShortDto initiator;
 
     @NotNull
-    private Location location;
+    private LocationDto location;
 
     @NotNull
     private Boolean paid;

@@ -42,4 +42,6 @@ public interface EventService {
     CategoryDto addCategory(CategoryNewDto categoryNewDto);
 
     void deleteCategory(Integer catId);
+
+    Category getCatById(Integer catId);
 }

@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
         User user = repository.findById(userId).orElseThrow(()-> new UserNotFoundException(
                 String.format("User id=%d not found", userId)));
 
-        log.trace("{} Найден пользователь id={} : {}", LocalDateTime.now(), userId, user);
+        log.trace("{} Found user id={} : {}", LocalDateTime.now(), userId, user);
 
         return user;
     }

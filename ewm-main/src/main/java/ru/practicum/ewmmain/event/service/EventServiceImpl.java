@@ -71,14 +71,15 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto addEvent(Integer userId, EventNewDto eventNew) {
-        // TODO: 24.09.2022
-        //Location
-        //paid	boolean default: false
-        //participantLimit default: 0
-        //requestModeration	boolean default: true
-        //Event event = repository.save(EventDtoMapper.toEvent(userService.userId, eventNew));
+        //TODO: 24.09.2022
+        Location location = locRepository.getByLatAndLon(eventNew.getLocation().getLat(),
+                        eventNew.getLocation().getLon())
+                .orElse(locRepository.save(LocationDtoMapper.toLocation(eventNew.getLocation())));
 
-        return null;
+        Event event = repository.save(EventDtoMapper.toEvent(eventNew, userService.getUserById(userId),
+                this.getCatById(eventNew.getCategory()), location));
+
+        return EventDtoMapper.toDto(event, null, null);
     }
 
     @Override
@@ -137,5 +138,15 @@ public class EventServiceImpl implements EventService {
         catRepository.deleteById(catId);
 
         log.trace("{} Category id={} deleted", LocalDateTime.now(), catId);
+    }
+
+    @Override
+    public Category getCatById(Integer catId) {
+        Category category = catRepository.findById(catId).orElseThrow(() ->
+                new CategoryNotFoundException(String.format("Category id=%d not found", catId)));
+
+        log.trace("{} Found category id={} : {}", LocalDateTime.now(), catId, category);
+
+        return category;
     }
 }

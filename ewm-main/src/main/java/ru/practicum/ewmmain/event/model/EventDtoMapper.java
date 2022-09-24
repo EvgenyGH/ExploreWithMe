@@ -1,6 +1,5 @@
 package ru.practicum.ewmmain.event.model;
 
-import ru.practicum.ewmmain.compilation.model.Compilation;
 import ru.practicum.ewmmain.user.model.User;
 import ru.practicum.ewmmain.user.model.UserDtoMapper;
 
@@ -15,7 +14,7 @@ public class EventDtoMapper {
                 event.getDescription(),
                 event.getEventDate(),
                 UserDtoMapper.toDtoShort(event.getInitiator()),
-                event.getLocation(),
+                LocationDtoMapper.toDto(event.getLocation()),
                 event.getPaid(),
                 event.getParticipantLimit(),
                 event.getPublished(),
@@ -37,16 +36,19 @@ public class EventDtoMapper {
                 views);
     }
 
-    public static Event toEvent(User initiator, EventNewDto eventNew, LocalDateTime published,
+    // TODO: 24.09.2022 remove comments
+    /*public static Event toEvent(User initiator, EventNewDto eventNew, LocalDateTime published,
                                 State state, Compilation compilation, Category category) {
         return new Event(null, eventNew.getAnnotation(), LocalDateTime.now(),
                 eventNew.getDescription(),eventNew.getEventDate(), initiator,
                 eventNew.getLocation(), eventNew.getPaid(), eventNew.getParticipantLimit(),
                 published, eventNew.getRequestModeration(), state, eventNew.getTitle(), compilation, category);
-    }
+    }*/
 
-    public static Event toEvent(EventNewDto eventNew, User initiator, Category category) {
-        return EventDtoMapper.toEvent(initiator, eventNew, null, State.PENDING,
-                null, category);
+    public static Event toEvent(EventNewDto eventNew, User initiator, Category category, Location location) {
+        return new Event(null, eventNew.getAnnotation(), LocalDateTime.now(),
+                eventNew.getDescription(),eventNew.getEventDate(), initiator,
+                location, eventNew.getPaid(), eventNew.getParticipantLimit(), null,
+                eventNew.getRequestModeration(), State.PENDING, eventNew.getTitle(), null, category);
     }
 }

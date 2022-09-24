@@ -3,7 +3,6 @@ package ru.practicum.ewmmain.event.model;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -19,11 +18,9 @@ public class Location {
     @Column(name = "location_id")
     private Integer id;
 
-    @NotNull
     @Column(nullable = false)
     private Float latitude;
 
-    @NotNull
     @Column(nullable = false)
     private Float longitude;
 
