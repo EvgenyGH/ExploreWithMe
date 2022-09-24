@@ -9,6 +9,7 @@ import ru.practicum.ewmstats.repository.StatsRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,10 +26,13 @@ public class StatServiceImpl implements StatService {
 
     @Override
     public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        List<ViewStats> stats = repository.getStats(start, end, uris);
+        List<ViewStats> stats;
 
-        if (unique && stats.size() != 0) {
-            stats.forEach(vs -> vs.setHits(repository.countUniqueHits(start, end, vs.getUri(), vs.getApp())));
+        if (unique) {
+            stats = repository.getStatsUnique(start, end, uris).stream()
+                    .map(o -> new ViewStats(o.getApp(), o.getUri(), o.getHits())).collect(Collectors.toList());
+        } else {
+            stats = repository.getStats(start, end, uris);
         }
 
         log.trace("{} For request start={} end={} unique={} uris={} response :: {}", LocalDateTime.now(),
