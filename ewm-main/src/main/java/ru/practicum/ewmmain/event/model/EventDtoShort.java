@@ -2,7 +2,7 @@ package ru.practicum.ewmmain.event.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import ru.practicum.ewmmain.user.model.UserDtoShort;
+import ru.practicum.ewmmain.user.model.UserShortDto;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -36,7 +36,7 @@ public class EventDtoShort implements Serializable {
     private LocalDateTime eventDate;
 
     @NotNull
-    private UserDtoShort initiator;
+    private UserShortDto initiator;
 
     @NotNull
     private Boolean paid;

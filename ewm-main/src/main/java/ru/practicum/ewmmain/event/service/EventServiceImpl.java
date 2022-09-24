@@ -11,6 +11,7 @@ import ru.practicum.ewmmain.event.repository.CategoryRepository;
 import ru.practicum.ewmmain.event.repository.EventRepository;
 import ru.practicum.ewmmain.event.repository.LocationRepository;
 import ru.practicum.ewmmain.exception.CategoryNotFoundException;
+import ru.practicum.ewmmain.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
+    private final UserService userService;
     private final EventRepository repository;
     private final CategoryRepository catRepository;
     private final LocationRepository locRepository;
@@ -69,6 +71,13 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto addEvent(Integer userId, EventNewDto eventNew) {
+        // TODO: 24.09.2022
+        //Location
+        //paid	boolean default: false
+        //participantLimit default: 0
+        //requestModeration	boolean default: true
+        //Event event = repository.save(EventDtoMapper.toEvent(userService.userId, eventNew));
+
         return null;
     }
 

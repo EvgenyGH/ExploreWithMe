@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS events
     event_date         timestamp    NOT NULL,
     paid               boolean      NOT NULL,
     participant_limit  integer      NOT NULL,
-    published          timestamp    NOT NULL,
+    published          timestamp,
     request_moderation boolean      NOT NULL,
     state              varchar(20)  NOT NULL,
     title              varchar(120) NOT NULL,

@@ -2,6 +2,8 @@ package ru.practicum.ewmmain.event.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.ewmmain.event.validator.TwoHoursAfterNow;
@@ -20,7 +22,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class EventNewDto {
     @NotBlank
-    @Size(max = 7000, min = 20)
+    @Size(max = 2000, min = 20)
     private String annotation;
 
     @NotNull
@@ -39,13 +41,15 @@ public class EventNewDto {
     @NotNull
     private Location location;
 
-    @NotNull
-    private Boolean paid;
+    @JsonSetter(nulls = Nulls.SKIP)
+    private Boolean paid = false;
 
-    @NotNull
-    @Min(0)
-    //Значение 0 - означает отсутствие ограничения
-    private Integer participantLimit;
+    @Min(0) //Значение 0 - означает отсутствие ограничения
+    @JsonSetter(nulls = Nulls.SKIP)
+    private Integer participantLimit = 0;
+
+    @JsonSetter(nulls = Nulls.SKIP)
+    private Boolean requestModeration = false;
 
     @NotBlank
     @Size(max = 120, min = 3)

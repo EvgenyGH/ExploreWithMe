@@ -95,8 +95,11 @@ public class EventController {
 
     //Добавление нового события.
     //Дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента.
+    // TODO: 24.09.2022 check time
     @PostMapping("/users/{userId}/events")
     EventDto addEvent(@RequestBody @Valid EventNewDto eventNew, @PathVariable @Min(0) Integer userId) {
+        System.out.println("IAM HERE");
+
         return service.addEvent(userId, eventNew);
     }
 

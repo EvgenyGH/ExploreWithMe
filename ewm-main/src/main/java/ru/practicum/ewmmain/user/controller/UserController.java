@@ -3,8 +3,8 @@ package ru.practicum.ewmmain.user.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewmmain.user.model.User;
 import ru.practicum.ewmmain.user.model.UserDto;
+import ru.practicum.ewmmain.user.model.UserNewDto;
 import ru.practicum.ewmmain.user.service.UserService;
 
 import javax.validation.Valid;
@@ -20,7 +20,7 @@ public class UserController {
 
     //Добавление нового пользователя
     @PostMapping("/users")
-    User addUser(@RequestBody @Valid UserDto userDto) {
+    UserDto addUser(@RequestBody @Valid UserNewDto userDto) {
         return userService.addUser(userDto);
     }
 
@@ -29,7 +29,7 @@ public class UserController {
     //from - количество элементов, которые нужно пропустить для формирования текущего набора
     //to - количество элементов в наборе
     @GetMapping("/users")
-    List<User> getUsers(@RequestParam(required = false) List<Integer> ids,
+    List<UserDto> getUsers(@RequestParam(required = false) List<Integer> ids,
                         @RequestParam(required = false, defaultValue = "0") @Min(0) Integer from,
                         @RequestParam(required = false, defaultValue = "10") @Min(0) Integer size) {
         return userService.getUsers(ids, from, size);
