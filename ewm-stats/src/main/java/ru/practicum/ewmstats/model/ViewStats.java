@@ -16,5 +16,5 @@ public class ViewStats {
     private String uri;
 
     //Количество просмотров
-    private Integer hits;
+    private Long hits;
 }

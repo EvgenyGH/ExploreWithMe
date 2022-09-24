@@ -27,10 +27,10 @@ public class StatController {
 
     //Получение статистики по посещениям.
     @GetMapping("/stats")
-    List<ViewStats> getStats(@RequestBody @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
-                             @RequestBody @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
+    List<ViewStats> getStats(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+                             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
                              @RequestParam @Size(min = 1) List<String> uris,
-                             @RequestParam(required = false, defaultValue = "false") Boolean unique){
+                             @RequestParam(required = false, defaultValue = "false") Boolean unique) {
         return service.getStats(start, end, uris, unique);
     }
 }

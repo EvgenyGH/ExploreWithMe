@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS statistics;
+--DROP TABLE IF EXISTS statistics;
 
 CREATE TABLE IF NOT EXISTS statistics
 (
