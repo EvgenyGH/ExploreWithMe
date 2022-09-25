@@ -54,6 +54,7 @@ public class EventServiceImpl implements EventService {
                                          LocalDateTime rangeStart, LocalDateTime rangeEnd,
                                          Boolean onlyAvailable, SortOption sort, Integer from, Integer size,
                                          String ip, String uri) {
+        // TODO: 25.09.2022  
         return null;
     }
 
@@ -73,9 +74,6 @@ public class EventServiceImpl implements EventService {
         return EventDtoMapper.toDto(event, getConfRequests(eventId), getViews(eventId));
     }
 
-    protected void sendStatistics(String ip, String uri) {
-        // TODO: 25.09.2022
-    }
 
     @Override
     public List<CategoryDto> getCategories(Integer from, Integer size) {
@@ -164,7 +162,15 @@ public class EventServiceImpl implements EventService {
     public List<EventDto> getEventsAdmin(List<Integer> userIds, List<State> states,
                                          List<Integer> categoryIds, LocalDateTime rangeStart,
                                          LocalDateTime rangeEnd, Integer from, Integer size) {
-        return null;
+
+        List<Event> events = repository.getEventsAdmin(userIds, states, categoryIds,
+                rangeStart, rangeEnd, PageRequest.of(from / size, size));
+
+        log.trace("{} Found {} events by admin", LocalDateTime.now(), events.size());
+
+        return events.stream().map(event -> EventDtoMapper.toDto(event,
+                        getConfRequests(event.getId()), getViews(event.getId())))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -376,5 +382,9 @@ public class EventServiceImpl implements EventService {
         if (eventUpdate.getRequestModeration() != null) {
             event.setRequestModeration(eventUpdate.getRequestModeration());
         }
+    }
+
+    protected void sendStatistics(String ip, String uri) {
+        // TODO: 25.09.2022
     }
 }
