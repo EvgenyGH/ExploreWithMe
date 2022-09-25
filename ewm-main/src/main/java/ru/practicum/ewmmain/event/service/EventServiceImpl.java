@@ -148,7 +148,11 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto cancelEventAdmin(Integer eventId) {
-        return null;
+        Event event = checkConditionsAdm(eventId);
+
+        event.setState(State.CANCELED);
+
+        return EventDtoMapper.toDto(event, getConfRequests(eventId), getViews(eventId));
     }
 
     @Override
@@ -241,12 +245,7 @@ public class EventServiceImpl implements EventService {
     }
 
     protected Event checkConditions(Integer userId, Integer eventId) {
-        Event event = repository.findById(eventId)
-                .orElseThrow(() -> new EventNotFound(String.format("Event id=%d not found", eventId)));
-
-        if (event.getState().equals(State.PUBLISHED)) {
-            throw new OperationConditionViolationException("Published events can not be altered");
-        }
+        Event event = checkConditionsAdm(eventId);
 
         if (!event.getInitiator().getId().equals(userId)) {
             throw new EventNotFound(String.format("Event id=%d is not created by user id=%d",
@@ -255,4 +254,17 @@ public class EventServiceImpl implements EventService {
 
         return event;
     }
+
+    protected Event checkConditionsAdm(Integer eventId) {
+        Event event = repository.findById(eventId)
+                .orElseThrow(() -> new EventNotFound(String.format("Event id=%d not found", eventId)));
+
+        if (event.getState().equals(State.PUBLISHED)) {
+            throw new OperationConditionViolationException("Published events can not be altered");
+        }
+
+        return event;
+    }
+
+
 }
