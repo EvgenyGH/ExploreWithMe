@@ -93,7 +93,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDto updateEvent(Integer userId, EventUpdateDto eventUpdate) {
         Event event = checkConditions(userId, eventUpdate.getEventId());
-        event = updateEventData(eventUpdate, event);
+        updateEventData(eventUpdate, event);
 
         validateEvent(event);
         repository.save(event);
@@ -119,7 +119,11 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto getUserEvent(Integer userId, Integer eventId) {
-        return null;
+        Event event = checkConditions(userId, eventId);
+
+        log.trace("{} Event id={} found : {}", LocalDateTime.now(), eventId, event);
+
+        return EventDtoMapper.toDto(event, getConfRequests(eventId), getViews(eventId));
     }
 
     @Override
@@ -143,7 +147,14 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto updateEventAdmin(Integer eventId, EventUpdateAdminDto eventUpdate) {
-        return null;
+        Event event = checkEventExists(eventId);
+
+        updateEventDataAdm(eventUpdate, event);
+        repository.save(event);
+
+        log.trace("{} Event id={} updated by admin: {}", LocalDateTime.now(), event.getId(), event);
+
+        return EventDtoMapper.toDto(event, getConfRequests(event.getId()), getViews(event.getId()));
     }
 
     //Дата начала события должна быть не ранее чем за час от даты публикации.
@@ -226,7 +237,7 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    protected Event updateEventData(EventUpdateDto eventUpdate, Event event) {
+    protected void updateEventData(EventUpdateDto eventUpdate, Event event) {
         if (eventUpdate.getEventDate() != null) {
             event.setEventDate(eventUpdate.getEventDate());
         }
@@ -258,8 +269,6 @@ public class EventServiceImpl implements EventService {
         if (event.getState().equals(State.CANCELED)) {
             event.setState(State.PENDING);
         }
-
-        return event;
     }
 
     protected Event checkConditions(Integer userId, Integer eventId) {
@@ -292,7 +301,7 @@ public class EventServiceImpl implements EventService {
             throw new OperationConditionViolationException("Only PENDING events can be published");
         }
 
-        if (event.getEventDate().minusHours(1).isBefore(LocalDateTime.now())){
+        if (event.getEventDate().minusHours(1).isBefore(LocalDateTime.now())) {
             throw new ConstraintViolationException("Event has to start not earlier than 1 hour after publishing"
                     , null);
         }
@@ -306,4 +315,44 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new EventNotFound(String.format("Event id=%d not found", eventId)));
     }
 
+    protected void updateEventDataAdm(EventUpdateAdminDto eventUpdate, Event event) {
+        if (eventUpdate.getEventDate() != null) {
+            event.setEventDate(eventUpdate.getEventDate());
+        }
+
+        if (eventUpdate.getAnnotation() != null) {
+            event.setAnnotation(eventUpdate.getAnnotation());
+        }
+
+        if (eventUpdate.getCategory() != null) {
+            event.setCategory(getCatById(eventUpdate.getCategory()));
+        }
+
+        if (eventUpdate.getPaid() != null) {
+            event.setPaid(eventUpdate.getPaid());
+        }
+
+        if (eventUpdate.getDescription() != null) {
+            event.setDescription(eventUpdate.getDescription());
+        }
+
+        if (eventUpdate.getTitle() != null) {
+            event.setTitle(eventUpdate.getTitle());
+        }
+
+        if (eventUpdate.getParticipantLimit() != null) {
+            event.setParticipantLimit(eventUpdate.getParticipantLimit());
+        }
+
+        if (eventUpdate.getLocation() != null){
+            Location location = locRepository.getByLatAndLon(eventUpdate.getLocation().getLat(),
+                            eventUpdate.getLocation().getLon())
+                    .orElseGet(() -> locRepository.save(LocationDtoMapper.toLocation(eventUpdate.getLocation())));
+            event.setLocation(location);
+        }
+
+        if (eventUpdate.getRequestModeration() != null){
+            event.setRequestModeration(eventUpdate.getRequestModeration());
+        }
+    }
 }

@@ -2,7 +2,7 @@ package ru.practicum.ewmmain.event.model.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import ru.practicum.ewmmain.event.model.location.Location;
+import ru.practicum.ewmmain.event.model.location.LocationDto;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventUpdateAdminDto {
+public class EventUpdateAdminDto extends EventUpdateDto{
     private String annotation;
 
     private Integer category;
@@ -22,7 +22,7 @@ public class EventUpdateAdminDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
 
-    private Location location;
+    private LocationDto location;
 
     private Boolean paid;
 

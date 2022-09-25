@@ -17,6 +17,7 @@ public class EventDtoMapper {
                 event.getCreated(),
                 event.getDescription(),
                 event.getEventDate(),
+                event.getId(),
                 UserDtoMapper.toDtoShort(event.getInitiator()),
                 LocationDtoMapper.toDto(event.getLocation()),
                 event.getPaid(),
