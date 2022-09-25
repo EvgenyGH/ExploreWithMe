@@ -26,8 +26,7 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,13 +48,59 @@ public class EventServiceImpl implements EventService {
         this.validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
+    //Получение событий с возможностью фильтрации.
+    //Только опубликованные события.
+    //Текстовый поиск по аннотации и описанию без учета регистра.
+    //Если не указаны даты [rangeStart-rangeEnd] возвращаются события позже текущей даты и времени.
+    //Информацию о запросе направляется в сервисе статистики.
+    //Параметры:
+    //text - текст для поиска в содержимом аннотации и подробном описании события;
+    //categories - список идентификаторов категорий в которых будет вестись поиск;
+    //paid - поиск только платных/бесплатных событий;
+    //rangeStart - дата и время не раньше которых должно произойти событие
+    //rangeEnd - дата и время не позже которых должно произойти событие
+    //onlyAvailable - только события у которых не исчерпан лимит запросов на участие
+    //sort - Вариант сортировки: по дате события или по количеству просмотров (EVENT_DATE, VIEWS)
+    //from - количество событий, которые нужно пропустить для формирования текущего набора
+    //size - количество событий в наборе
     @Override
     public List<EventDtoShort> getEvents(String text, List<Integer> categories, Boolean paid,
                                          LocalDateTime rangeStart, LocalDateTime rangeEnd,
                                          Boolean onlyAvailable, SortOption sort, Integer from, Integer size,
                                          String ip, String uri) {
-        // TODO: 25.09.2022  
-        return null;
+
+        if (rangeStart == null || rangeEnd == null) {
+            rangeStart = LocalDateTime.now();
+            rangeEnd = LocalDateTime.now().plusYears(1000);
+        }
+
+        //Сортировка по возрастанию даты
+        List<Event> events = repository.getPublishedEvents(text.toLowerCase(), categories, paid, rangeStart,
+                rangeEnd, PageRequest.of(from / size, size, Direction.ASC,
+                        "eventDate"));
+
+        List<EventDtoShort> eventsDto = events.stream().map(event -> EventDtoMapper.toDtoShort(event,
+                getConfRequests(event.getId()), getViews(event.getId()))).collect(Collectors.toList());
+
+        //Только события у которых не исчерпан лимит запросов на участие
+        if (onlyAvailable) {
+            HashMap<Integer, Integer> limits = new HashMap<>();
+
+            events.forEach(event -> limits.put(event.getId(), event.getParticipantLimit()));
+            eventsDto = eventsDto.stream().filter(eventDto -> limits.get(eventDto.getId()).equals(0) ||
+                    limits.get(eventDto.getId()) > eventDto.getConfirmedRequests()).collect(Collectors.toList());
+        }
+
+        //Сортировка событий по убыванию просмотров
+        if (sort.equals(SortOption.VIEWS)) {
+            eventsDto.sort(Comparator.comparing(EventDtoShort::getViews).reversed());
+        }
+
+        sendStatistics(ip, uri);
+
+        log.trace("{} Found {} events", LocalDateTime.now(), eventsDto.size());
+
+        return eventsDto;
     }
 
     @Override
@@ -250,11 +295,15 @@ public class EventServiceImpl implements EventService {
 
     protected Integer getViews(Integer eventId) {
         // TODO: 25.09.2022 check it
+        //Random rnd = new Random();
+        //return rnd.nextInt(100);
         return 1001;
     }
 
     protected Integer getConfRequests(Integer eventId) {
         // TODO: 25.09.2022 check it
+        //Random rnd = new Random();
+        //return rnd.nextInt(100);
         return 99;
     }
 
@@ -385,6 +434,6 @@ public class EventServiceImpl implements EventService {
     }
 
     protected void sendStatistics(String ip, String uri) {
-        // TODO: 25.09.2022
+        //TODO: 25.09.2022
     }
 }

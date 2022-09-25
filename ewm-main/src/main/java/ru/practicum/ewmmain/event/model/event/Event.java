@@ -85,5 +85,3 @@ public class Event {
         return id != null ? id : 0;
     }
 }
-
-// TODO: 21.09.2022 Do not forget to realize the feature
