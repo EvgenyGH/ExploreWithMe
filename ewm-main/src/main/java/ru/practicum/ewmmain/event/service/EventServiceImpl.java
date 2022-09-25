@@ -59,7 +59,22 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto getEventById(Integer eventId, String ip, String uri) {
-        return null;
+        Event event = checkEventExists(eventId);
+
+        if (!event.getState().equals(State.PUBLISHED)){
+            throw new EventNotFound(String.format("Event id=%d is not published. Only published events allowed",
+                    eventId));
+        }
+
+        sendStatistics(ip, uri);
+
+        log.trace("{} Event id={} found : {}", LocalDateTime.now(), eventId, event);
+
+        return EventDtoMapper.toDto(event, getConfRequests(eventId), getViews(eventId));
+    }
+
+    protected void sendStatistics(String ip, String uri) {
+        // TODO: 25.09.2022
     }
 
     @Override
@@ -121,7 +136,7 @@ public class EventServiceImpl implements EventService {
     public EventDto getUserEvent(Integer userId, Integer eventId) {
         Event event = checkConditions(userId, eventId);
 
-        log.trace("{} Event id={} found : {}", LocalDateTime.now(), eventId, event);
+        log.trace("{} Event id={} user id={} found : {}", LocalDateTime.now(), eventId, userId, event);
 
         return EventDtoMapper.toDto(event, getConfRequests(eventId), getViews(eventId));
     }
