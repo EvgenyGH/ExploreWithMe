@@ -98,6 +98,8 @@ public class EventServiceImpl implements EventService {
         validateEvent(event);
         repository.save(event);
 
+        log.trace("{} Event id={} updated : {}", LocalDateTime.now(), event.getId(), event);
+
         return EventDtoMapper.toDto(event, getConfRequests(event.getId()), getViews(event.getId()));
     }
 
@@ -125,6 +127,9 @@ public class EventServiceImpl implements EventService {
         Event event = checkConditions(userId, eventId);
 
         event.setState(State.CANCELED);
+        repository.save(event);
+
+        log.trace("{} Event id={} canceled : {}", LocalDateTime.now(), event.getId(), event);
 
         return EventDtoMapper.toDto(event, getConfRequests(eventId), getViews(eventId));
     }
@@ -141,9 +146,19 @@ public class EventServiceImpl implements EventService {
         return null;
     }
 
+    //Дата начала события должна быть не ранее чем за час от даты публикации.
+    //Событие должно быть в состоянии ожидания публикации.
     @Override
     public EventDto publishEvent(Integer eventId) {
-        return null;
+        Event event = checkPublishConditions(eventId);
+
+        event.setState(State.PUBLISHED);
+        event.setPublished(LocalDateTime.now());
+        repository.save(event);
+
+        log.trace("{} Event id={} published : {}", LocalDateTime.now(), event.getId(), event);
+
+        return EventDtoMapper.toDto(event, getConfRequests(eventId), getViews(eventId));
     }
 
     @Override
@@ -151,6 +166,9 @@ public class EventServiceImpl implements EventService {
         Event event = checkConditionsAdm(eventId);
 
         event.setState(State.CANCELED);
+        repository.save(event);
+
+        log.trace("{} Event id={} canceled : {}", LocalDateTime.now(), event.getId(), event);
 
         return EventDtoMapper.toDto(event, getConfRequests(eventId), getViews(eventId));
     }
@@ -256,8 +274,7 @@ public class EventServiceImpl implements EventService {
     }
 
     protected Event checkConditionsAdm(Integer eventId) {
-        Event event = repository.findById(eventId)
-                .orElseThrow(() -> new EventNotFound(String.format("Event id=%d not found", eventId)));
+        Event event = checkEventExists(eventId);
 
         if (event.getState().equals(State.PUBLISHED)) {
             throw new OperationConditionViolationException("Published events can not be altered");
@@ -266,5 +283,27 @@ public class EventServiceImpl implements EventService {
         return event;
     }
 
+    //Дата начала события должна быть не ранее чем за час от даты публикации.
+    //Событие должно быть в состоянии ожидания публикации.
+    protected Event checkPublishConditions(Integer eventId) {
+        Event event = checkEventExists(eventId);
+
+        if (!event.getState().equals(State.PENDING)) {
+            throw new OperationConditionViolationException("Only PENDING events can be published");
+        }
+
+        if (event.getEventDate().minusHours(1).isBefore(LocalDateTime.now())){
+            throw new ConstraintViolationException("Event has to start not earlier than 1 hour after publishing"
+                    , null);
+        }
+
+        return event;
+
+    }
+
+    protected Event checkEventExists(Integer eventId) {
+        return repository.findById(eventId)
+                .orElseThrow(() -> new EventNotFound(String.format("Event id=%d not found", eventId)));
+    }
 
 }
