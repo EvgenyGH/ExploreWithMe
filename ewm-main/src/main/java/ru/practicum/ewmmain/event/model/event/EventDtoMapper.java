@@ -30,11 +30,11 @@ public class EventDtoMapper {
     }
 
     public static EventDtoShort toDtoShort(Event event, Integer confirmedRequests, Integer views) {
-        return new EventDtoShort(event.getId(),
-                event.getAnnotation(),
+        return new EventDtoShort(event.getAnnotation(),
                 CategoryDtoMapper.toDto(event.getCategory()),
                 confirmedRequests,
                 event.getEventDate(),
+                event.getId(),
                 UserDtoMapper.toDtoShort(event.getInitiator()),
                 event.getPaid(),
                 event.getTitle(),

@@ -19,8 +19,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventDtoShort implements Serializable {
-    private Integer id;
-
     @NotBlank
     @Size(max = 2000, min = 20)
     private String annotation;
@@ -35,6 +33,10 @@ public class EventDtoShort implements Serializable {
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
+
+    @NotNull
+    @Min(0)
+    private Integer id;
 
     @NotNull
     private UserShortDto initiator;

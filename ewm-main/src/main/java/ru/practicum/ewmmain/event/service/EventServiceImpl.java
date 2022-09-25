@@ -61,7 +61,7 @@ public class EventServiceImpl implements EventService {
     public EventDto getEventById(Integer eventId, String ip, String uri) {
         Event event = checkEventExists(eventId);
 
-        if (!event.getState().equals(State.PUBLISHED)){
+        if (!event.getState().equals(State.PUBLISHED)) {
             throw new EventNotFound(String.format("Event id=%d is not published. Only published events allowed",
                     eventId));
         }
@@ -98,8 +98,15 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDtoShort> getUserEvents(Integer userId, Integer from, Integer to) {
-        return null;
+    public List<EventDtoShort> getUserEvents(Integer userId, Integer from, Integer size) {
+        List<Event> events = repository.findAllByInitiatorId(userId,
+                PageRequest.of(from / size, size));
+
+        log.trace("{} Found {} events of user id={}", LocalDateTime.now(), events.size(), userId);
+
+        return events.stream().map(event -> EventDtoMapper.toDtoShort(event,
+                        getConfRequests(event.getId()), getViews(event.getId())))
+                .collect(Collectors.toList());
     }
 
 
@@ -359,14 +366,14 @@ public class EventServiceImpl implements EventService {
             event.setParticipantLimit(eventUpdate.getParticipantLimit());
         }
 
-        if (eventUpdate.getLocation() != null){
+        if (eventUpdate.getLocation() != null) {
             Location location = locRepository.getByLatAndLon(eventUpdate.getLocation().getLat(),
                             eventUpdate.getLocation().getLon())
                     .orElseGet(() -> locRepository.save(LocationDtoMapper.toLocation(eventUpdate.getLocation())));
             event.setLocation(location);
         }
 
-        if (eventUpdate.getRequestModeration() != null){
+        if (eventUpdate.getRequestModeration() != null) {
             event.setRequestModeration(eventUpdate.getRequestModeration());
         }
     }
