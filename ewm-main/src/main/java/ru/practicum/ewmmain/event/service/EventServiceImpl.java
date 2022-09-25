@@ -92,23 +92,10 @@ public class EventServiceImpl implements EventService {
     //Если редактируется отменённое событие, то оно переходит в состояние ожидания модерации.
     @Override
     public EventDto updateEvent(Integer userId, EventUpdateDto eventUpdate) {
-        Event event = repository.findById(eventUpdate.getEventId())
-                .orElseThrow(() -> new EventNotFound(String.format("Event id=%d not found",
-                        eventUpdate.getEventId())));
-
-        if (event.getState().equals(State.PUBLISHED)) {
-            throw new OperationConditionViolationException("Published events can not be altered");
-        }
-
-        if (!event.getInitiator().getId().equals(userId)) {
-            throw new EventNotFound(String.format("Event id=%d is not created by user id=%d",
-                    event.getId(), event.getInitiator().getId()));
-        }
-
+        Event event = checkConditions(userId, eventUpdate.getEventId());
         event = updateEventData(eventUpdate, event);
 
         validateEvent(event);
-
         repository.save(event);
 
         return EventDtoMapper.toDto(event, getConfRequests(event.getId()), getViews(event.getId()));
@@ -135,7 +122,11 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto cancelEvent(Integer userId, Integer eventId) {
-        return null;
+        Event event = checkConditions(userId, eventId);
+
+        event.setState(State.CANCELED);
+
+        return EventDtoMapper.toDto(event, getConfRequests(eventId), getViews(eventId));
     }
 
     @Override
@@ -244,6 +235,22 @@ public class EventServiceImpl implements EventService {
 
         if (event.getState().equals(State.CANCELED)) {
             event.setState(State.PENDING);
+        }
+
+        return event;
+    }
+
+    protected Event checkConditions(Integer userId, Integer eventId) {
+        Event event = repository.findById(eventId)
+                .orElseThrow(() -> new EventNotFound(String.format("Event id=%d not found", eventId)));
+
+        if (event.getState().equals(State.PUBLISHED)) {
+            throw new OperationConditionViolationException("Published events can not be altered");
+        }
+
+        if (!event.getInitiator().getId().equals(userId)) {
+            throw new EventNotFound(String.format("Event id=%d is not created by user id=%d",
+                    event.getId(), event.getInitiator().getId()));
         }
 
         return event;
