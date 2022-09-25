@@ -1,30 +1,53 @@
 package ru.practicum.ewmmain.event.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewmmain.event.controller.SortOption;
-import ru.practicum.ewmmain.event.model.*;
+import ru.practicum.ewmmain.event.model.category.Category;
+import ru.practicum.ewmmain.event.model.category.CategoryDto;
+import ru.practicum.ewmmain.event.model.category.CategoryDtoMapper;
+import ru.practicum.ewmmain.event.model.category.CategoryNewDto;
+import ru.practicum.ewmmain.event.model.event.*;
+import ru.practicum.ewmmain.event.model.location.Location;
+import ru.practicum.ewmmain.event.model.location.LocationDtoMapper;
 import ru.practicum.ewmmain.event.repository.CategoryRepository;
 import ru.practicum.ewmmain.event.repository.EventRepository;
 import ru.practicum.ewmmain.event.repository.LocationRepository;
 import ru.practicum.ewmmain.exception.CategoryNotFoundException;
+import ru.practicum.ewmmain.exception.EventNotFound;
+import ru.practicum.ewmmain.exception.OperationConditionViolationException;
 import ru.practicum.ewmmain.user.service.UserService;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
     private final UserService userService;
     private final EventRepository repository;
     private final CategoryRepository catRepository;
     private final LocationRepository locRepository;
+    private final Validator validator;
+
+    @Autowired
+    public EventServiceImpl(UserService userService, EventRepository repository, CategoryRepository catRepository,
+                            LocationRepository locRepository) {
+        this.userService = userService;
+        this.repository = repository;
+        this.catRepository = catRepository;
+        this.locRepository = locRepository;
+        this.validator = Validation.buildDefaultValidatorFactory().getValidator();
+    }
 
     @Override
     public List<EventDtoShort> getEvents(String text, List<Integer> categories, Boolean paid,
@@ -64,22 +87,45 @@ public class EventServiceImpl implements EventService {
         return null;
     }
 
+
+    //Изменить можно только отмененные события или события в состоянии ожидания модерации.
+    //Если редактируется отменённое событие, то оно переходит в состояние ожидания модерации.
     @Override
     public EventDto updateEvent(Integer userId, EventUpdateDto eventUpdate) {
-        return null;
+        Event event = repository.findById(eventUpdate.getEventId())
+                .orElseThrow(() -> new EventNotFound(String.format("Event id=%d not found",
+                        eventUpdate.getEventId())));
+
+        if (event.getState().equals(State.PUBLISHED)) {
+            throw new OperationConditionViolationException("Published events can not be altered");
+        }
+
+        if (!event.getInitiator().getId().equals(userId)) {
+            throw new EventNotFound(String.format("Event id=%d is not created by user id=%d",
+                    event.getId(), event.getInitiator().getId()));
+        }
+
+        event = updateEventData(eventUpdate, event);
+
+        validateEvent(event);
+
+        repository.save(event);
+
+        return EventDtoMapper.toDto(event, getConfRequests(event.getId()), getViews(event.getId()));
     }
 
     @Override
     public EventDto addEvent(Integer userId, EventNewDto eventNew) {
-        //TODO: 24.09.2022
         Location location = locRepository.getByLatAndLon(eventNew.getLocation().getLat(),
                         eventNew.getLocation().getLon())
-                .orElse(locRepository.save(LocationDtoMapper.toLocation(eventNew.getLocation())));
+                .orElseGet(() -> locRepository.save(LocationDtoMapper.toLocation(eventNew.getLocation())));
 
         Event event = repository.save(EventDtoMapper.toEvent(eventNew, userService.getUserById(userId),
                 this.getCatById(eventNew.getCategory()), location));
 
-        return EventDtoMapper.toDto(event, null, null);
+        log.trace("{} New event id={} added : {}", LocalDateTime.now(), event.getId(), event);
+
+        return EventDtoMapper.toDto(event, 0, 0);
     }
 
     @Override
@@ -148,5 +194,58 @@ public class EventServiceImpl implements EventService {
         log.trace("{} Found category id={} : {}", LocalDateTime.now(), catId, category);
 
         return category;
+    }
+
+    protected Integer getViews(Integer eventId) {
+        // TODO: 25.09.2022 check it
+        return 1001;
+    }
+
+    protected Integer getConfRequests(Integer eventId) {
+        // TODO: 25.09.2022 check it
+        return 99;
+    }
+
+    protected void validateEvent(Event event) {
+        Set<ConstraintViolation<Event>> violations = validator.validate(event);
+        if (violations.size() > 0) {
+            throw new ConstraintViolationException(violations);
+        }
+    }
+
+    protected Event updateEventData(EventUpdateDto eventUpdate, Event event) {
+        if (eventUpdate.getEventDate() != null) {
+            event.setEventDate(eventUpdate.getEventDate());
+        }
+
+        if (eventUpdate.getAnnotation() != null) {
+            event.setAnnotation(eventUpdate.getAnnotation());
+        }
+
+        if (eventUpdate.getCategory() != null) {
+            event.setCategory(getCatById(eventUpdate.getCategory()));
+        }
+
+        if (eventUpdate.getPaid() != null) {
+            event.setPaid(eventUpdate.getPaid());
+        }
+
+        if (eventUpdate.getDescription() != null) {
+            event.setDescription(eventUpdate.getDescription());
+        }
+
+        if (eventUpdate.getTitle() != null) {
+            event.setTitle(eventUpdate.getTitle());
+        }
+
+        if (eventUpdate.getParticipantLimit() != null) {
+            event.setParticipantLimit(eventUpdate.getParticipantLimit());
+        }
+
+        if (event.getState().equals(State.CANCELED)) {
+            event.setState(State.PENDING);
+        }
+
+        return event;
     }
 }

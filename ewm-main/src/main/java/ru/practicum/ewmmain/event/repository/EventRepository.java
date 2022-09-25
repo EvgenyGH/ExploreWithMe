@@ -1,7 +1,7 @@
 package ru.practicum.ewmmain.event.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.ewmmain.event.model.Event;
+import ru.practicum.ewmmain.event.model.event.Event;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
 }

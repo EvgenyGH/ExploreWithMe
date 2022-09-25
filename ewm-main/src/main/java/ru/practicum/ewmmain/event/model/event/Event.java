@@ -1,7 +1,9 @@
-package ru.practicum.ewmmain.event.model;
+package ru.practicum.ewmmain.event.model.event;
 
 import lombok.*;
 import ru.practicum.ewmmain.compilation.model.Compilation;
+import ru.practicum.ewmmain.event.model.category.Category;
+import ru.practicum.ewmmain.event.model.location.Location;
 import ru.practicum.ewmmain.user.model.User;
 
 import javax.persistence.*;

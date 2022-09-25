@@ -1,5 +1,9 @@
-package ru.practicum.ewmmain.event.model;
+package ru.practicum.ewmmain.event.model.event;
 
+import ru.practicum.ewmmain.event.model.category.Category;
+import ru.practicum.ewmmain.event.model.category.CategoryDtoMapper;
+import ru.practicum.ewmmain.event.model.location.Location;
+import ru.practicum.ewmmain.event.model.location.LocationDtoMapper;
 import ru.practicum.ewmmain.user.model.User;
 import ru.practicum.ewmmain.user.model.UserDtoMapper;
 
@@ -35,15 +39,6 @@ public class EventDtoMapper {
                 event.getTitle(),
                 views);
     }
-
-    // TODO: 24.09.2022 remove comments
-    /*public static Event toEvent(User initiator, EventNewDto eventNew, LocalDateTime published,
-                                State state, Compilation compilation, Category category) {
-        return new Event(null, eventNew.getAnnotation(), LocalDateTime.now(),
-                eventNew.getDescription(),eventNew.getEventDate(), initiator,
-                eventNew.getLocation(), eventNew.getPaid(), eventNew.getParticipantLimit(),
-                published, eventNew.getRequestModeration(), state, eventNew.getTitle(), compilation, category);
-    }*/
 
     public static Event toEvent(EventNewDto eventNew, User initiator, Category category, Location location) {
         return new Event(null, eventNew.getAnnotation(), LocalDateTime.now(),

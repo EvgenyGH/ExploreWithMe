@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.event.model;
+package ru.practicum.ewmmain.event.model.event;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import ru.practicum.ewmmain.event.model.location.LocationDto;
 import ru.practicum.ewmmain.event.validator.TwoHoursAfterNow;
 
 import javax.validation.constraints.Min;

@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.event.model;
+package ru.practicum.ewmmain.event.model.category;
 
 import lombok.*;
 

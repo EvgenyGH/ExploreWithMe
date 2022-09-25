@@ -2,7 +2,7 @@ package ru.practicum.ewmmain.event.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.practicum.ewmmain.event.model.Location;
+import ru.practicum.ewmmain.event.model.location.Location;
 
 import java.util.Optional;
 

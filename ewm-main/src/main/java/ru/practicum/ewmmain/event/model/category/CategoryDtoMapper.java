@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.event.model;
+package ru.practicum.ewmmain.event.model.category;
 
 public class CategoryDtoMapper {
     public static CategoryDto toDto(Category category){

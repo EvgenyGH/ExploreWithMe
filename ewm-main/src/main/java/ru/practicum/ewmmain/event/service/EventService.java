@@ -1,7 +1,10 @@
 package ru.practicum.ewmmain.event.service;
 
 import ru.practicum.ewmmain.event.controller.SortOption;
-import ru.practicum.ewmmain.event.model.*;
+import ru.practicum.ewmmain.event.model.category.Category;
+import ru.practicum.ewmmain.event.model.category.CategoryDto;
+import ru.practicum.ewmmain.event.model.category.CategoryNewDto;
+import ru.practicum.ewmmain.event.model.event.*;
 
 import java.time.LocalDateTime;
 import java.util.List;

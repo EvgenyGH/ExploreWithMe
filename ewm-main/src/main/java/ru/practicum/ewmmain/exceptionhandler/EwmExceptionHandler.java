@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ru.practicum.ewmmain.errormodel.ErrorResponse;
 import ru.practicum.ewmmain.exception.CategoryNotFoundException;
+import ru.practicum.ewmmain.exception.OperationConditionViolationException;
 import ru.practicum.ewmmain.user.exception.UserNotFoundException;
 
 import javax.validation.ConstraintViolationException;
@@ -41,10 +42,10 @@ public class EwmExceptionHandler {
         return response;
     }
 
-    /*//403 FORBIDDEN Не выполнены условия для совершения операции
-    @ExceptionHandler()
+    //403 FORBIDDEN Не выполнены условия для совершения операции
+    @ExceptionHandler({OperationConditionViolationException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    ErrorResponse forbiddenHandler(DataIntegrityViolationException exception) {
+    ErrorResponse forbiddenHandler(OperationConditionViolationException exception) {
         ErrorResponse response = new ErrorResponse(exception.getStackTrace(),
                 exception.getMessage(),
                 FORBIDDEN_MSG,
@@ -54,7 +55,7 @@ public class EwmExceptionHandler {
                 response.getTimestamp(), exception.getClass().getSimpleName(),
                 exception.getMessage());
         return response;
-    }*/
+    }
 
     //404 NOT_FOUND Объект не найден
     @ExceptionHandler({EmptyResultDataAccessException.class, CategoryNotFoundException.class,

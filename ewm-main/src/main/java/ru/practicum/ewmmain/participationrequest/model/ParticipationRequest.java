@@ -1,7 +1,7 @@
 package ru.practicum.ewmmain.participationrequest.model;
 
 import lombok.*;
-import ru.practicum.ewmmain.event.model.Event;
+import ru.practicum.ewmmain.event.model.event.Event;
 import ru.practicum.ewmmain.user.model.User;
 
 import javax.persistence.*;

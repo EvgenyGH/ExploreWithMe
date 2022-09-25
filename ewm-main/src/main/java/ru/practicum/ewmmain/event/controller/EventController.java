@@ -5,7 +5,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewmmain.event.model.*;
+import ru.practicum.ewmmain.event.model.category.CategoryDto;
+import ru.practicum.ewmmain.event.model.category.CategoryNewDto;
+import ru.practicum.ewmmain.event.model.event.*;
 import ru.practicum.ewmmain.event.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;

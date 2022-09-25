@@ -1,7 +1,7 @@
 package ru.practicum.ewmmain.compilation.model;
 
 import lombok.*;
-import ru.practicum.ewmmain.event.model.EventDtoShort;
+import ru.practicum.ewmmain.event.model.event.EventDtoShort;
 
 import java.io.Serializable;
 import java.util.List;
