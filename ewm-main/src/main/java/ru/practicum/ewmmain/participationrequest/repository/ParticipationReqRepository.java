@@ -46,4 +46,9 @@ public interface ParticipationReqRepository extends JpaRepository<ParticipationR
     void rejectNotConfirmed(Integer eventId);
 
     List<ParticipationRequest> findAllByRequesterId(Integer requesterId);
+
+    @Query(value = "SELECT p FROM ParticipationRequest p " +
+            "WHERE p.event.initiator.id = ?1 " +
+            "AND p.event.id = ?2")
+    List<ParticipationRequest> getUserEventRequests(Integer initiatorId, Integer eventId);
 }

@@ -30,7 +30,9 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
 
     @Override
     public List<ParticipationRequestDto> getUserRequest(Integer userId, Integer eventId) {
-        return null;
+        List<ParticipationRequest> requests = repository.getUserEventRequests(userId, eventId);
+
+        return requests.stream().map(PartReqDtoMapper::toDto).collect(Collectors.toList());
     }
 
     //Подтверждение чужой заявки на участие в событии текущего пользователя.
