@@ -32,9 +32,42 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
         return null;
     }
 
+    //Подтверждение чужой заявки на участие в событии текущего пользователя.
+    //Если лимит заявок равен 0 или отключена пре-модерация заявок, то подтверждение заявок не требуется.
+    //Нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие.
+    //Если при подтверждении данной заявки, лимит заявок для события исчерпан, то все
+    //неподтверждённые заявки отклоняются.
     @Override
     public ParticipationRequestDto confirmRequest(Integer userId, Integer eventId, Integer reqId) {
-        return null;
+        ParticipationRequest request = repository.getUserRequest(userId, eventId, reqId)
+                .orElseThrow(() -> new ParticipationRequestNotFoundException(String.format(
+                        "Request id=%d for event id=%d created by user id=%d not found",
+                        reqId, eventId, userId)));
+        Event event = request.getEvent();
+
+        if (event.getParticipantLimit().equals(0) || !event.getRequestModeration()){
+            throw new OperationConditionViolationException(
+                    "Confirmation of events without participation limits or pre-moderation not required");
+        }
+
+        if (event.getParticipantLimit() <= getConfRequests(eventId)){
+            throw new OperationConditionViolationException(
+                    String.format("Event id=%d participants limit reached", eventId));
+        }
+
+        repository.confirmRequest(reqId);
+        request.setStatus(Status.CONFIRMED);
+
+        log.trace("{} Event id={} confirmed", LocalDateTime.now(), eventId);
+
+        if(event.getParticipantLimit().equals(getConfRequests(eventId))){
+            repository.rejectNotConfirmed(eventId);
+
+            log.trace("{} Participation limit reached. Not confirmed requests for event id={} rejected",
+                    LocalDateTime.now(), eventId);
+        }
+
+        return PartReqDtoMapper.toDto(request);
     }
 
     @Override
@@ -53,6 +86,7 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
     //Нельзя участвовать в неопубликованном событии.
     //Если у события достигнут лимит запросов на участие - необходимо вернуть ошибку.
     //Если для события отключена пре-модерация запросов на участие, то запрос переходит в подтвержденный.
+    //Или если getParticipantLimit=0.
     @Override
     public ParticipationRequestDto addRequest(Integer userId, Integer eventId) {
 
@@ -83,10 +117,10 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
         ParticipationRequest request = new ParticipationRequest(null, event, LocalDateTime.now(),
                 user, null);
 
-        if (event.getRequestModeration()) {
-            request.setStatus(Status.PENDING);
-        } else {
+        if (!event.getRequestModeration() || event.getParticipantLimit().equals(0)) {
             request.setStatus(Status.CONFIRMED);
+        } else {
+            request.setStatus(Status.PENDING);
         }
 
         request = repository.save(request);
