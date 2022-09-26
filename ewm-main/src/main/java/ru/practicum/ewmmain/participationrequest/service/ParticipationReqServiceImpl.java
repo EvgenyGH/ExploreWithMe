@@ -32,6 +32,9 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
     public List<ParticipationRequestDto> getUserRequest(Integer userId, Integer eventId) {
         List<ParticipationRequest> requests = repository.getUserEventRequests(userId, eventId);
 
+        log.trace("{} Found {} requests (initiator id={}, request id={}", LocalDateTime.now(),
+                requests.size(), userId, eventId);
+
         return requests.stream().map(PartReqDtoMapper::toDto).collect(Collectors.toList());
     }
 
@@ -83,12 +86,17 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
         request.setStatus(Status.REJECTED);
         repository.save(request);
 
+        log.trace("{} Request id={} rejected", LocalDateTime.now(), reqId);
+
         return PartReqDtoMapper.toDto(request);
     }
 
     @Override
     public List<ParticipationRequestDto> getUserRequests(Integer userId) {
         List<ParticipationRequest> requests = repository.findAllByRequesterId(userId);
+
+        log.trace("{} Found {} requests (requester id={}))", LocalDateTime.now(),
+                requests.size(), userId);
 
         return requests.stream().map(PartReqDtoMapper::toDto).collect(Collectors.toList());
     }
@@ -158,6 +166,11 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
 
     @Override
     public Integer getConfRequests(Integer eventId) {
-        return repository.getConfRequests(eventId);
+        Integer confRequests = repository.getConfRequests(eventId);
+
+        log.trace("{} Found {} confirmd requests of event id={}", LocalDateTime.now(),
+                confRequests, eventId);
+
+        return confRequests;
     }
 }
