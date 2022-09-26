@@ -72,7 +72,15 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
 
     @Override
     public ParticipationRequestDto rejectRequest(Integer userId, Integer eventId, Integer reqId) {
-        return null;
+        ParticipationRequest request = repository.getUserRequest(userId, eventId, reqId)
+                .orElseThrow(() -> new ParticipationRequestNotFoundException(String.format(
+                        "Request id=%d for event id=%d created by user id=%d not found",
+                        reqId, eventId, userId)));
+
+        request.setStatus(Status.REJECTED);
+        repository.save(request);
+
+        return PartReqDtoMapper.toDto(request);
     }
 
     @Override
