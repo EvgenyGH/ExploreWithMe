@@ -47,4 +47,6 @@ public interface EventService {
     void deleteCategory(Integer catId);
 
     Category getCatById(Integer catId);
+
+    Event getEventById(Integer eventId);
 }

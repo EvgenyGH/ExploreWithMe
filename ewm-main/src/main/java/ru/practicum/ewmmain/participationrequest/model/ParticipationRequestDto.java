@@ -1,5 +1,6 @@
 package ru.practicum.ewmmain.participationrequest.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class ParticipationRequestDto {
 
     private Integer event;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created;
 
     private Integer requester;

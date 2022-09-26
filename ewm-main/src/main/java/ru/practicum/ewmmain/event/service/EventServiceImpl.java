@@ -2,9 +2,11 @@ package ru.practicum.ewmmain.event.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import ru.practicum.ewmmain.client.StatisticsClient;
 import ru.practicum.ewmmain.event.controller.SortOption;
 import ru.practicum.ewmmain.event.model.category.Category;
 import ru.practicum.ewmmain.event.model.category.CategoryDto;
@@ -19,6 +21,7 @@ import ru.practicum.ewmmain.event.repository.LocationRepository;
 import ru.practicum.ewmmain.exception.CategoryNotFoundException;
 import ru.practicum.ewmmain.exception.EventNotFound;
 import ru.practicum.ewmmain.exception.OperationConditionViolationException;
+import ru.practicum.ewmmain.participationrequest.service.ParticipationReqService;
 import ru.practicum.ewmmain.user.service.UserService;
 
 import javax.validation.ConstraintViolation;
@@ -37,14 +40,19 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository catRepository;
     private final LocationRepository locRepository;
     private final Validator validator;
+    private final StatisticsClient client;
+    private final ParticipationReqService reqService;
 
     @Autowired
     public EventServiceImpl(UserService userService, EventRepository repository, CategoryRepository catRepository,
-                            LocationRepository locRepository) {
+                            LocationRepository locRepository, StatisticsClient client,
+                            @Lazy ParticipationReqService reqService) {
         this.userService = userService;
         this.repository = repository;
         this.catRepository = catRepository;
         this.locRepository = locRepository;
+        this.client = client;
+        this.reqService = reqService;
         this.validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
@@ -105,7 +113,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto getEventById(Integer eventId, String ip, String uri) {
-        Event event = checkEventExists(eventId);
+        Event event = getEventById(eventId);
 
         if (!event.getState().equals(State.PUBLISHED)) {
             throw new EventNotFound(String.format("Event id=%d is not published. Only published events allowed",
@@ -220,7 +228,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto updateEventAdmin(Integer eventId, EventUpdateAdminDto eventUpdate) {
-        Event event = checkEventExists(eventId);
+        Event event = getEventById(eventId);
 
         updateEventDataAdm(eventUpdate, event);
         repository.save(event);
@@ -294,9 +302,10 @@ public class EventServiceImpl implements EventService {
     }
 
     protected Integer getViews(Integer eventId) {
-        // TODO: 25.09.2022 check it
+        //TODO: 25.09.2022 check it
         //Random rnd = new Random();
         //return rnd.nextInt(100);
+        //return client.getViews(eventId);
         return 1001;
     }
 
@@ -304,6 +313,7 @@ public class EventServiceImpl implements EventService {
         // TODO: 25.09.2022 check it
         //Random rnd = new Random();
         //return rnd.nextInt(100);
+        //return reqService.getConfRequests(eventId);
         return 99;
     }
 
@@ -360,7 +370,7 @@ public class EventServiceImpl implements EventService {
     }
 
     protected Event checkConditionsAdm(Integer eventId) {
-        Event event = checkEventExists(eventId);
+        Event event = getEventById(eventId);
 
         if (event.getState().equals(State.PUBLISHED)) {
             throw new OperationConditionViolationException("Published events can not be altered");
@@ -372,7 +382,7 @@ public class EventServiceImpl implements EventService {
     //Дата начала события должна быть не ранее чем за час от даты публикации.
     //Событие должно быть в состоянии ожидания публикации.
     protected Event checkPublishConditions(Integer eventId) {
-        Event event = checkEventExists(eventId);
+        Event event = getEventById(eventId);
 
         if (!event.getState().equals(State.PENDING)) {
             throw new OperationConditionViolationException("Only PENDING events can be published");
@@ -387,9 +397,14 @@ public class EventServiceImpl implements EventService {
 
     }
 
-    protected Event checkEventExists(Integer eventId) {
-        return repository.findById(eventId)
+    @Override
+    public Event getEventById(Integer eventId) {
+        Event event = repository.findById(eventId)
                 .orElseThrow(() -> new EventNotFound(String.format("Event id=%d not found", eventId)));
+
+        log.trace("{} Found event id={} : {}", LocalDateTime.now(), eventId, event);
+
+        return event;
     }
 
     protected void updateEventDataAdm(EventUpdateAdminDto eventUpdate, Event event) {
@@ -435,5 +450,6 @@ public class EventServiceImpl implements EventService {
 
     protected void sendStatistics(String ip, String uri) {
         //TODO: 25.09.2022
+        client.sendStatistics(ip, uri);
     }
 }

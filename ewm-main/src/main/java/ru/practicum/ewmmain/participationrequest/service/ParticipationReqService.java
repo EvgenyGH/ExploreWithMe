@@ -16,4 +16,6 @@ public interface ParticipationReqService {
     ParticipationRequestDto addRequest(Integer userId, Integer eventId);
 
     ParticipationRequestDto cancelRequest(Integer userId, Integer requestId);
+
+    Integer getConfRequests(Integer eventId);
 }
