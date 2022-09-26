@@ -12,6 +12,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import ru.practicum.ewmmain.errormodel.ErrorResponse;
 import ru.practicum.ewmmain.exception.CategoryNotFoundException;
 import ru.practicum.ewmmain.exception.OperationConditionViolationException;
+import ru.practicum.ewmmain.participationrequest.exception.ParticipationRequestNotFoundException;
 import ru.practicum.ewmmain.user.exception.UserNotFoundException;
 
 import javax.validation.ConstraintViolationException;
@@ -59,7 +60,7 @@ public class EwmExceptionHandler {
 
     //404 NOT_FOUND Объект не найден
     @ExceptionHandler({EmptyResultDataAccessException.class, CategoryNotFoundException.class,
-            UserNotFoundException.class})
+            UserNotFoundException.class, ParticipationRequestNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     ErrorResponse notFoundHandler(Exception exception) {
         ErrorResponse response = new ErrorResponse(null,

@@ -7,6 +7,7 @@ import ru.practicum.ewmmain.event.model.event.Event;
 import ru.practicum.ewmmain.event.model.event.State;
 import ru.practicum.ewmmain.event.service.EventService;
 import ru.practicum.ewmmain.exception.OperationConditionViolationException;
+import ru.practicum.ewmmain.participationrequest.exception.ParticipationRequestNotFoundException;
 import ru.practicum.ewmmain.participationrequest.model.PartReqDtoMapper;
 import ru.practicum.ewmmain.participationrequest.model.ParticipationRequest;
 import ru.practicum.ewmmain.participationrequest.model.ParticipationRequestDto;
@@ -55,25 +56,25 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
     @Override
     public ParticipationRequestDto addRequest(Integer userId, Integer eventId) {
 
-        if (repository.isUserRequsest(userId, eventId).isPresent()) {
+        if (repository.getUserRequest(userId, eventId).isPresent()) {
             throw new OperationConditionViolationException(
                     String.format("Request from User id=%d to event id=%d already exists", userId, eventId));
         }
 
         Event event = eventService.getEventById(eventId);
 
-        if (userId.equals(event.getInitiator().getId())){
+        if (userId.equals(event.getInitiator().getId())) {
             throw new OperationConditionViolationException(
                     String.format("User id=%d is initiator of event id=%d", userId, eventId));
         }
 
-        if (!event.getState().equals(State.PUBLISHED)){
+        if (!event.getState().equals(State.PUBLISHED)) {
             throw new OperationConditionViolationException(
                     String.format("Event id=%d is not published yet", eventId));
         }
 
         if (event.getParticipantLimit().equals(0) ||
-                event.getParticipantLimit() <= getConfRequests(eventId)){
+                event.getParticipantLimit() <= getConfRequests(eventId)) {
             throw new OperationConditionViolationException(
                     String.format("Event id=%d participants limit reached", eventId));
         }
@@ -82,7 +83,7 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
         ParticipationRequest request = new ParticipationRequest(null, event, LocalDateTime.now(),
                 user, null);
 
-        if (event.getRequestModeration()){
+        if (event.getRequestModeration()) {
             request.setStatus(Status.PENDING);
         } else {
             request.setStatus(Status.CONFIRMED);
@@ -98,10 +99,18 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
 
     @Override
     public ParticipationRequestDto cancelRequest(Integer userId, Integer requestId) {
-        return null;
+        ParticipationRequest request = repository.getUserRequestById(userId, requestId)
+                .orElseThrow(() -> new ParticipationRequestNotFoundException(
+                        String.format("User id=%d does not have request id=%d", userId, requestId)));
+        repository.deleteById(requestId);
+
+        log.trace("{} user id={} request id={} deleted : {}", LocalDateTime.now(), userId, requestId, request);
+
+        return PartReqDtoMapper.toDto(request);
     }
+
     @Override
-    public Integer getConfRequests(Integer eventId){
+    public Integer getConfRequests(Integer eventId) {
         return repository.getConfRequests(eventId);
     }
 }

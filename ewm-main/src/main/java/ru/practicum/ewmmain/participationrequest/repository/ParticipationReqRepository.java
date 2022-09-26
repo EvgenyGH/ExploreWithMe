@@ -11,7 +11,12 @@ public interface ParticipationReqRepository extends JpaRepository<ParticipationR
     @Query(value = "SELECT p FROM ParticipationRequest p " +
             "WHERE p.requester.id = ?1 " +
             "AND p.event.id = ?2")
-    Optional<ParticipationRequest> isUserRequsest(Integer userId, Integer eventId);
+    Optional<ParticipationRequest> getUserRequest(Integer userId, Integer eventId);
+
+    @Query(value = "SELECT p FROM ParticipationRequest p " +
+            "WHERE p.requester.id = ?1 " +
+            "AND p.id = ?2")
+    Optional<ParticipationRequest> getUserRequestById(Integer userId, Integer requestId);
 
     @Query("SELECT count(p) FROM ParticipationRequest p " +
             "WHERE p.event.id = ?1 " +
