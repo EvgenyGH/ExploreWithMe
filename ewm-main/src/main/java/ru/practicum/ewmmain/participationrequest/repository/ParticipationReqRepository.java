@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewmmain.participationrequest.model.ParticipationRequest;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ParticipationReqRepository extends JpaRepository<ParticipationRequest, Integer> {
@@ -13,7 +14,7 @@ public interface ParticipationReqRepository extends JpaRepository<ParticipationR
     @Query(value = "SELECT p FROM ParticipationRequest p " +
             "WHERE p.requester.id = ?1 " +
             "AND p.event.id = ?2")
-    Optional<ParticipationRequest> getUserRequest(Integer userId, Integer eventId);
+    Optional<ParticipationRequest> getUserRequest(Integer requesterId, Integer eventId);
 
     @Query(value = "SELECT p FROM ParticipationRequest p " +
             "WHERE p.event.initiator.id = ?1 " +
@@ -24,7 +25,7 @@ public interface ParticipationReqRepository extends JpaRepository<ParticipationR
     @Query(value = "SELECT p FROM ParticipationRequest p " +
             "WHERE p.requester.id = ?1 " +
             "AND p.id = ?2")
-    Optional<ParticipationRequest> getUserRequestById(Integer userId, Integer requestId);
+    Optional<ParticipationRequest> getUserRequestById(Integer requesterId, Integer requestId);
 
     @Query("SELECT count(p) FROM ParticipationRequest p " +
             "WHERE p.event.id = ?1 " +
@@ -43,4 +44,6 @@ public interface ParticipationReqRepository extends JpaRepository<ParticipationR
             "WHERE p.status <> 'CONFIRMED' " +
             "AND p.event.id = ?1")
     void rejectNotConfirmed(Integer eventId);
+
+    List<ParticipationRequest> findAllByRequesterId(Integer requesterId);
 }

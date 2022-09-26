@@ -18,6 +18,7 @@ import ru.practicum.ewmmain.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -85,7 +86,9 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
 
     @Override
     public List<ParticipationRequestDto> getUserRequests(Integer userId) {
-        return null;
+        List<ParticipationRequest> requests = repository.findAllByRequesterId(userId);
+
+        return requests.stream().map(PartReqDtoMapper::toDto).collect(Collectors.toList());
     }
 
     //Добавление запроса от текущего пользователя на участие в событии.
