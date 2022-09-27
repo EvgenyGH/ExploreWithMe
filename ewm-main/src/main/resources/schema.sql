@@ -43,8 +43,6 @@ CREATE TABLE IF NOT EXISTS events
     title              varchar(120) NOT NULL,
     category_id        bigint       NOT NULL
         constraint fk_cat_id references categories,
-    compilation_id     bigint
-        constraint fk_comp_id references compilations ON DELETE SET NULL,
     initiator_id       bigint       NOT NULL
         constraint fk_initiator_id references users,
     location_id        bigint       NOT NULL
@@ -60,4 +58,14 @@ CREATE TABLE IF NOT EXISTS participation_requests
         constraint fk_event_id references events,
     requester_user_id bigint      NOT NULL
         constraint fk_requester_id references users
+);
+
+CREATE TABLE IF NOT EXISTS compilation_event_connector
+(
+    compilation_id     bigint NOT NULL
+        constraint fk_compilation_conn_id
+            references compilations ON DELETE CASCADE,
+    event_id           bigint NOT NULL
+        constraint fk_event_conn_id
+            references events ON DELETE CASCADE
 );

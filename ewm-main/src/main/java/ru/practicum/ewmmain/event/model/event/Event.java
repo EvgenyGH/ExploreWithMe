@@ -1,7 +1,6 @@
 package ru.practicum.ewmmain.event.model.event;
 
 import lombok.*;
-import ru.practicum.ewmmain.compilation.model.Compilation;
 import ru.practicum.ewmmain.event.model.category.Category;
 import ru.practicum.ewmmain.event.model.location.Location;
 import ru.practicum.ewmmain.user.model.User;
@@ -61,10 +60,6 @@ public class Event {
 
     @Column(nullable = false, length = 50)
     private String title;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "compilation_id")
-    private Compilation compilation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)

@@ -1,8 +1,10 @@
 package ru.practicum.ewmmain.compilation.model;
 
 import lombok.*;
+import ru.practicum.ewmmain.event.model.event.Event;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,6 +25,12 @@ public class Compilation {
 
     @Column(nullable = false, length = 100)
     private String title;
+
+    @OneToMany
+    @JoinTable(name = "compilation_event_connector",
+            joinColumns = @JoinColumn (name = "compilation_id"),
+            inverseJoinColumns = @JoinColumn (name = "event_id"))
+    private List<Event> events;
 
     @Override
     public boolean equals(Object o) {

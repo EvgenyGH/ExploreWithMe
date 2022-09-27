@@ -7,9 +7,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-import ru.practicum.ewmstats.model.EndpointHit;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -35,8 +33,7 @@ public class StatisticsClientImpl implements StatisticsClient{
     @Override
     public void sendStatistics(String ip, String uri) {
         // TODO: 25.09.2022 encode the date
-        EndpointHit body =  new EndpointHit(0, "ewm", uri, ip, LocalDateTime.now());
-        makeRequest(null, "/hit", body, HttpMethod.POST, null);
+        makeRequest(null, "/hit", null, HttpMethod.POST, null);
     }
 
     @Override

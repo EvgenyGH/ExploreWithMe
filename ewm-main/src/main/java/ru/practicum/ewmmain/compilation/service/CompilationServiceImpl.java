@@ -42,12 +42,11 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional
     public CompilationDto addCompilation(CompilationNewDto compilationDto) {
-        Compilation compilation = repository.save(new Compilation(null,
-                compilationDto.getPinned(), compilationDto.getTitle()));
+
         List<Event> events = eventRepository.findAllById(compilationDto.getEvents());
 
-        events.forEach(event->event.setCompilation(compilation));
-        eventRepository.saveAll(events);
+        Compilation compilation = repository.save(new Compilation(null,
+                compilationDto.getPinned(), compilationDto.getTitle(), events));
 
         log.trace("{} Compilation id={} added : {}", LocalDateTime.now(),
                 compilation.getId(), compilation);

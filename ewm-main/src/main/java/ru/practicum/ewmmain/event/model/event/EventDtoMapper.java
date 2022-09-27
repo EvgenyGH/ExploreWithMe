@@ -45,6 +45,6 @@ public class EventDtoMapper {
         return new Event(null, eventNew.getAnnotation(), LocalDateTime.now(),
                 eventNew.getDescription(),eventNew.getEventDate(), initiator,
                 location, eventNew.getPaid(), eventNew.getParticipantLimit(), null,
-                eventNew.getRequestModeration(), State.PENDING, eventNew.getTitle(), null, category);
+                eventNew.getRequestModeration(), State.PENDING, eventNew.getTitle(), category);
     }
 }
