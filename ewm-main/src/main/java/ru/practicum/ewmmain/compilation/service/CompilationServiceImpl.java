@@ -60,7 +60,8 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public void deleteCompilation(Integer compId) {
-
+        repository.deleteById(compId);
+        log.trace("{} Compilation id={} deleted", LocalDateTime.now(), compId);
     }
 
     @Override

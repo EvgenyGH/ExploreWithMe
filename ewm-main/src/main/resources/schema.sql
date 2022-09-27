@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS events
     category_id        bigint       NOT NULL
         constraint fk_cat_id references categories,
     compilation_id     bigint
-        constraint fk_comp_id references compilations,
+        constraint fk_comp_id references compilations ON DELETE SET NULL,
     initiator_id       bigint       NOT NULL
         constraint fk_initiator_id references users,
     location_id        bigint       NOT NULL
