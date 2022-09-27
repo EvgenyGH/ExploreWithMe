@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewmmain.client.StatisticsClient;
+import ru.practicum.ewmmain.compilation.exception.CompilationNotFoundException;
 import ru.practicum.ewmmain.compilation.model.Compilation;
 import ru.practicum.ewmmain.compilation.model.CompilationDto;
 import ru.practicum.ewmmain.compilation.model.CompilationDtoMapper;
@@ -75,11 +76,21 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public void unpinCompilation(Integer compId) {
+        if (repository.pinUnpinCompilation(compId, false) != 1) {
+            throw new CompilationNotFoundException(
+                    String.format("Compilation id=%d not found", compId));
+        }
 
+        log.trace("{} Compilation id={} unpinned", LocalDateTime.now(), compId);
     }
 
     @Override
     public void pinCompilation(Integer compId) {
+        if (repository.pinUnpinCompilation(compId, true) != 1) {
+            throw new CompilationNotFoundException(
+                    String.format("Compilation id=%d not found", compId));
+        }
 
+        log.trace("{} Compilation id={} pinned", LocalDateTime.now(), compId);
     }
 }

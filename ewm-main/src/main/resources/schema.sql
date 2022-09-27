@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS compilation_event_connector
     compilation_id     bigint NOT NULL
         constraint fk_compilation_conn_id
             references compilations ON DELETE CASCADE,
-    event_id           bigint NOT NULL
+    event_id           bigint
         constraint fk_event_conn_id
             references events ON DELETE CASCADE
 );

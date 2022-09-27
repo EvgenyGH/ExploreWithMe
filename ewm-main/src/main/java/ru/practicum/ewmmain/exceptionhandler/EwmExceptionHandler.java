@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import ru.practicum.ewmmain.compilation.exception.CompilationNotFoundException;
 import ru.practicum.ewmmain.errormodel.ErrorResponse;
 import ru.practicum.ewmmain.exception.CategoryNotFoundException;
 import ru.practicum.ewmmain.exception.OperationConditionViolationException;
@@ -60,7 +61,8 @@ public class EwmExceptionHandler {
 
     //404 NOT_FOUND Объект не найден
     @ExceptionHandler({EmptyResultDataAccessException.class, CategoryNotFoundException.class,
-            UserNotFoundException.class, ParticipationRequestNotFoundException.class})
+            UserNotFoundException.class, ParticipationRequestNotFoundException.class,
+            CompilationNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     ErrorResponse notFoundHandler(Exception exception) {
         ErrorResponse response = new ErrorResponse(null,

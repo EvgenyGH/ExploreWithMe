@@ -7,6 +7,7 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 @Getter
@@ -16,7 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompilationNewDto implements Serializable {
-    private List<Integer> events;
+    @JsonSetter(nulls = Nulls.SKIP)
+    private List<Integer> events = new LinkedList<>();
 
     @JsonSetter(nulls = Nulls.SKIP)
     private Boolean pinned = false;
