@@ -9,6 +9,7 @@ import ru.practicum.ewmmain.compilation.service.CompilationService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,9 +19,9 @@ public class CompilationController {
 
     //Получение подборок событий.
     @GetMapping("/compilations")
-    CompilationDto getCompilations(@RequestParam Boolean pinned,
-                                   @RequestParam(required = false, defaultValue = "0") Integer from,
-                                   @RequestParam(required = false, defaultValue = "10") Integer size) {
+    List<CompilationDto> getCompilations(@RequestParam(required = false) Boolean pinned,
+                                         @RequestParam(required = false, defaultValue = "0") Integer from,
+                                         @RequestParam(required = false, defaultValue = "10") Integer size) {
         return service.getCompilations(pinned, from, size);
     }
 

@@ -2,6 +2,8 @@ package ru.practicum.ewmmain.compilation.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewmmain.client.StatisticsClient;
@@ -33,8 +35,22 @@ public class CompilationServiceImpl implements CompilationService {
 
 
     @Override
-    public CompilationDto getCompilations(Boolean pinned, Integer from, Integer size) {
-        return null;
+    public List<CompilationDto> getCompilations(Boolean pinned, Integer from, Integer size) {
+        List<Compilation> compilations;
+        Pageable pageable = PageRequest.of(from / size, size);
+
+        if (pinned == null) {
+            compilations = repository.findAll(pageable).toList();
+        } else {
+            compilations = repository.findAllByPinned(pinned, pageable);
+        }
+
+        return compilations.stream().map(compilation -> CompilationDtoMapper.toDto(compilation,
+                compilation.getEvents().stream().map(event -> EventDtoMapper.toDtoShort(event,
+                                reqService.getConfRequests(event.getId()),
+                                client.getViews(event.getId())))
+                        .collect(Collectors.toList()))).collect(Collectors.toList());
+
     }
 
     @Override

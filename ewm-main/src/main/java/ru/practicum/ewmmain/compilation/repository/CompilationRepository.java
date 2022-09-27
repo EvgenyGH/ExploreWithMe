@@ -1,10 +1,13 @@
 package ru.practicum.ewmmain.compilation.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewmmain.compilation.model.Compilation;
+
+import java.util.List;
 
 public interface CompilationRepository extends JpaRepository<Compilation, Integer> {
     @Modifying
@@ -12,4 +15,6 @@ public interface CompilationRepository extends JpaRepository<Compilation, Intege
     @Query(value = "UPDATE Compilation c SET c.pinned = ?2 " +
             "WHERE c.id = ?1")
     int pinUnpinCompilation(Integer compilationId, Boolean pinned);
+
+    List<Compilation> findAllByPinned(boolean pinned, Pageable pageable);
 }
