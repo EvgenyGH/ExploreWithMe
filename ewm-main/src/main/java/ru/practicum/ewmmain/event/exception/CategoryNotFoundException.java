@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.exception;
+package ru.practicum.ewmmain.event.exception;
 
 public class CategoryNotFoundException extends RuntimeException{
     public CategoryNotFoundException(String message) {

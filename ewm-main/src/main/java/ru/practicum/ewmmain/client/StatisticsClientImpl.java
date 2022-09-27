@@ -8,12 +8,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 @Component
 @Slf4j
-public class StatisticsClientImpl implements StatisticsClient{
+public class StatisticsClientImpl implements StatisticsClient {
     private RestTemplate restTemplate;
     private HttpHeaders defaultHeaders;
 
@@ -33,19 +34,25 @@ public class StatisticsClientImpl implements StatisticsClient{
     @Override
     public void sendStatistics(String ip, String uri) {
         // TODO: 25.09.2022 encode the date
-        makeRequest(null, "/hit", null, HttpMethod.POST, null);
+        //makeRequest(null, "/hit", null, HttpMethod.POST, null);
+       /* RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        StatRequestDto body = new StatRequestDto(0, "ewm", "http://localhost:9090/hit", "ip", LocalDateTime.now());
+        HttpEntity<StatRequestDto> request = new HttpEntity<>(body, headers);
+
+        restTemplate.exchange("http://localhost:9090/hit",
+                HttpMethod.POST,
+                request, Object.class);*/
+
     }
 
     @Override
     public Integer getViews(Integer eventId) {
-
-        return null;
-    }
-
-    @Override
-    public Integer getConfRequests(Integer eventId) {
-
-        return null;
+        //TODO: 25.09.2022 check it
+        //Random rnd = new Random();
+        //return rnd.nextInt(100);
+        return 1001;
     }
 
 

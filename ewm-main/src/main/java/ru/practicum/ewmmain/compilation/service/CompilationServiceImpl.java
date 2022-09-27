@@ -14,6 +14,7 @@ import ru.practicum.ewmmain.compilation.repository.CompilationRepository;
 import ru.practicum.ewmmain.event.model.event.Event;
 import ru.practicum.ewmmain.event.model.event.EventDtoMapper;
 import ru.practicum.ewmmain.event.repository.EventRepository;
+import ru.practicum.ewmmain.event.service.EventService;
 import ru.practicum.ewmmain.participationrequest.service.ParticipationReqService;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository repository;
     private final EventRepository eventRepository;
+    private final EventService eventService;
     private final StatisticsClient client;
     private final ParticipationReqService reqService;
 
@@ -37,13 +39,18 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto getCompilationById(Integer compId) {
-        return null;
+        Compilation compilation = repository.findById(compId).orElseThrow(() ->
+                new CompilationNotFoundException(String.format("Compilation id=%d not found", compId)));
+
+        return CompilationDtoMapper.toDto(compilation, compilation.getEvents().stream()
+                .map(event -> EventDtoMapper.toDtoShort(event, reqService.getConfRequests(event.getId()),
+                        client.getViews(event.getId())))
+                .collect(Collectors.toList()));
     }
 
     @Override
     @Transactional
     public CompilationDto addCompilation(CompilationNewDto compilationDto) {
-
         List<Event> events = eventRepository.findAllById(compilationDto.getEvents());
 
         Compilation compilation = repository.save(new Compilation(null,
@@ -54,8 +61,8 @@ public class CompilationServiceImpl implements CompilationService {
 
         return CompilationDtoMapper.toDto(compilation,
                 events.stream().map(event -> EventDtoMapper.toDtoShort(event,
-                reqService.getConfRequests(event.getId()), client.getViews(event.getId())))
-                .collect(Collectors.toList()));
+                                reqService.getConfRequests(event.getId()), client.getViews(event.getId())))
+                        .collect(Collectors.toList()));
     }
 
     @Override
@@ -66,12 +73,26 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public void deleteCompilationEvent(Integer compId, Integer eventId) {
+        Compilation compilation = repository.findById(compId).orElseThrow(() ->
+                new CompilationNotFoundException(String.format("Compilation id=%d not found", compId)));
 
+        compilation.getEvents().remove(eventService.getEventById(eventId));
+        repository.save(compilation);
+
+        log.trace("{} Event id={} removed from compilation id={} : {}",
+                LocalDateTime.now(), eventId, compId, compilation);
     }
 
     @Override
     public void addCompilationEvent(Integer compId, Integer eventId) {
+        Compilation compilation = repository.findById(compId).orElseThrow(() ->
+                new CompilationNotFoundException(String.format("Compilation id=%d not found", compId)));
 
+        compilation.getEvents().add(eventService.getEventById(eventId));
+        repository.save(compilation);
+
+        log.trace("{} Event id={} added to compilation id={} : {}",
+                LocalDateTime.now(), eventId, compId, compilation);
     }
 
     @Override

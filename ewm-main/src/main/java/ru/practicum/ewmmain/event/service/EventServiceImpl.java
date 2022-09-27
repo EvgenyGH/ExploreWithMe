@@ -18,8 +18,8 @@ import ru.practicum.ewmmain.event.model.location.LocationDtoMapper;
 import ru.practicum.ewmmain.event.repository.CategoryRepository;
 import ru.practicum.ewmmain.event.repository.EventRepository;
 import ru.practicum.ewmmain.event.repository.LocationRepository;
-import ru.practicum.ewmmain.exception.CategoryNotFoundException;
-import ru.practicum.ewmmain.exception.EventNotFound;
+import ru.practicum.ewmmain.event.exception.CategoryNotFoundException;
+import ru.practicum.ewmmain.event.exception.EventNotFoundException;
 import ru.practicum.ewmmain.exception.OperationConditionViolationException;
 import ru.practicum.ewmmain.participationrequest.service.ParticipationReqService;
 import ru.practicum.ewmmain.user.service.UserService;
@@ -116,7 +116,7 @@ public class EventServiceImpl implements EventService {
         Event event = getEventById(eventId);
 
         if (!event.getState().equals(State.PUBLISHED)) {
-            throw new EventNotFound(String.format("Event id=%d is not published. Only published events allowed",
+            throw new EventNotFoundException(String.format("Event id=%d is not published. Only published events allowed",
                     eventId));
         }
 
@@ -302,19 +302,11 @@ public class EventServiceImpl implements EventService {
     }
 
     protected Integer getViews(Integer eventId) {
-        //TODO: 25.09.2022 check it
-        //Random rnd = new Random();
-        //return rnd.nextInt(100);
-        //return client.getViews(eventId);
-        return 1001;
+        return client.getViews(eventId);
     }
 
     protected Integer getConfRequests(Integer eventId) {
-        // TODO: 25.09.2022 check it
-        //Random rnd = new Random();
-        //return rnd.nextInt(100);
-        //return reqService.getConfRequests(eventId);
-        return 99;
+        return reqService.getConfRequests(eventId);
     }
 
     protected void validateEvent(Event event) {
@@ -362,7 +354,7 @@ public class EventServiceImpl implements EventService {
         Event event = checkConditionsAdm(eventId);
 
         if (!event.getInitiator().getId().equals(userId)) {
-            throw new EventNotFound(String.format("Event id=%d is not created by user id=%d",
+            throw new EventNotFoundException(String.format("Event id=%d is not created by user id=%d",
                     event.getId(), event.getInitiator().getId()));
         }
 
@@ -400,7 +392,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event getEventById(Integer eventId) {
         Event event = repository.findById(eventId)
-                .orElseThrow(() -> new EventNotFound(String.format("Event id=%d not found", eventId)));
+                .orElseThrow(() -> new EventNotFoundException(String.format("Event id=%d not found", eventId)));
 
         log.trace("{} Found event id={} : {}", LocalDateTime.now(), eventId, event);
 
@@ -449,7 +441,6 @@ public class EventServiceImpl implements EventService {
     }
 
     protected void sendStatistics(String ip, String uri) {
-        //TODO: 25.09.2022
         client.sendStatistics(ip, uri);
     }
 }
