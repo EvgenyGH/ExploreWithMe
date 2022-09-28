@@ -128,7 +128,7 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
                     String.format("Event id=%d is not published yet", eventId));
         }
 
-        if (event.getParticipantLimit().equals(0) ||
+        if (!event.getParticipantLimit().equals(0) &&
                 event.getParticipantLimit() <= getConfRequests(eventId)) {
             throw new OperationConditionViolationException(
                     String.format("Event id=%d participants limit reached", eventId));
@@ -157,9 +157,11 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
         ParticipationRequest request = repository.getUserRequestById(userId, requestId)
                 .orElseThrow(() -> new ParticipationRequestNotFoundException(
                         String.format("User id=%d does not have request id=%d", userId, requestId)));
-        repository.deleteById(requestId);
 
-        log.trace("{} user id={} request id={} deleted : {}", LocalDateTime.now(), userId, requestId, request);
+        request.setStatus(Status.CANCELED);
+        repository.save(request);
+
+        log.trace("{} user id={} request id={} canceled : {}", LocalDateTime.now(), userId, requestId, request);
 
         return PartReqDtoMapper.toDto(request);
     }
