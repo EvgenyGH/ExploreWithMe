@@ -48,6 +48,8 @@ public class StatisticsClientImpl implements StatisticsClient {
             hits = responseList.stream().map(StatResponseDto::getHits).reduce(0, Integer::sum);
         }
 
+        log.trace("{} Statistics received hits={} of uri={}", LocalDateTime.now(), hits, "/events/" + eventId);
+
         return hits;
     }
 

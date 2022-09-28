@@ -212,9 +212,18 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    // TODO: 28.09.2022
     public List<EventDto> getEventsAdmin(List<Integer> userIds, List<State> states,
                                          List<Integer> categoryIds, LocalDateTime rangeStart,
                                          LocalDateTime rangeEnd, Integer from, Integer size) {
+
+        if (rangeStart == null){
+            rangeStart = LocalDateTime.now();
+        }
+
+        if (rangeEnd == null){
+            rangeEnd = LocalDateTime.now().plusYears(1000);
+        }
 
         List<Event> events = repository.getEventsAdmin(userIds, states, categoryIds,
                 rangeStart, rangeEnd, PageRequest.of(from / size, size));
