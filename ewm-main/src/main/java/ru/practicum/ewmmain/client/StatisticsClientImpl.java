@@ -2,11 +2,13 @@ package ru.practicum.ewmmain.client;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
+import ru.practicum.ewmmain.exception.StatServerUnacceptableResponseException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,17 +17,13 @@ import java.util.Map;
 @Component
 @Slf4j
 public class StatisticsClientImpl implements StatisticsClient {
-    private RestTemplate restTemplate;
-    private HttpHeaders defaultHeaders;
+    private final RestTemplate restTemplate;
+    private final HttpHeaders defaultHeaders;
 
-    // TODO: 25.09.2022 check autowired
-    public StatisticsClientImpl(@Value("${statistics.server.url}") String url, RestTemplateBuilder builder) {
+    public StatisticsClientImpl(@Value("${statistics.server.url}") String url) {
         this.restTemplate = new RestTemplate();
+        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(url));
 
-    /*builder
-                .requestFactory(HttpComponentsClientHttpRequestFactory.class)
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(url + "/items"))
-                .build();*/
         this.defaultHeaders = new HttpHeaders();
         defaultHeaders.setContentType(MediaType.APPLICATION_JSON);
         defaultHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
@@ -33,49 +31,50 @@ public class StatisticsClientImpl implements StatisticsClient {
 
     @Override
     public void sendStatistics(String ip, String uri) {
-        // TODO: 25.09.2022 encode the date
-        //makeRequest(null, "/hit", null, HttpMethod.POST, null);
-       /* RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
-        StatRequestDto body = new StatRequestDto(0, "ewm", "http://localhost:9090/hit", "ip", LocalDateTime.now());
-        HttpEntity<StatRequestDto> request = new HttpEntity<>(body, headers);
-
-        restTemplate.exchange("http://localhost:9090/hit",
-                HttpMethod.POST,
-                request, Object.class);*/
-
+        StatRequestDto body = new StatRequestDto(0, "ewm", uri, ip, LocalDateTime.now());
+        makeRequest("/hit", body, HttpMethod.POST, null, new ParameterizedTypeReference<Object>() {});
+        log.trace("{} Statistics sent ip={} uri={}", LocalDateTime.now(), ip, uri);
     }
 
     @Override
     public Integer getViews(Integer eventId) {
-        //TODO: 25.09.2022 check it
-        //Random rnd = new Random();
-        //return rnd.nextInt(100);
-        return 1001;
+        ResponseEntity<List<StatResponseDto>> response = makeRequest("/stats?uris={uris}", null,
+                HttpMethod.GET, Map.of("uris", "/events/" + eventId),
+                new ParameterizedTypeReference<List<StatResponseDto>>() {});
+        List<StatResponseDto> responseList = response.getBody();
+        Integer hits = 0;
+
+        if (responseList != null && responseList.size() > 0) {
+            hits = responseList.stream().map(StatResponseDto::getHits).reduce(0, Integer::sum);
+        }
+
+        return hits;
     }
 
 
     //Отправка REST запроса и получение ответа
-    protected <T> ResponseEntity<Object> makeRequest(Integer eventId, String statsUrl, T body,
-                                                     HttpMethod method, Map<String, Object> params) {
+    protected <T, U> ResponseEntity<U> makeRequest(String statsUrl, T body, HttpMethod method,
+                                                   Map<String, Object> params,
+                                                   ParameterizedTypeReference<U> type) {
+
         HttpEntity<Object> request = new HttpEntity<>(body, defaultHeaders);
-        ResponseEntity<Object> response;
+        ResponseEntity<U> response;
 
         try {
             if (params == null) {
-                response = restTemplate.exchange(statsUrl, method, request, Object.class);
+                response = restTemplate.exchange(statsUrl, method, request, type);
             } else {
-                response = restTemplate.exchange(statsUrl, method, request, Object.class, params);
+                response = restTemplate.exchange(statsUrl, method, request, type, params);
             }
         } catch (HttpStatusCodeException exception) {
-            response = new ResponseEntity<>(exception.getResponseBodyAsByteArray(),
-                    exception.getStatusCode());
+            throw new StatServerUnacceptableResponseException(String.format("Statistics server response status: %s",
+                    exception.getStatusCode()));
         }
+
+        log.trace("{} Statistics: method={} response code={}", LocalDateTime.now(),
+                method.name(), response.getStatusCode().name());
 
         return response;
     }
-
-
 }
 

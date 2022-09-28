@@ -168,7 +168,7 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
     public Integer getConfRequests(Integer eventId) {
         Integer confRequests = repository.getConfRequests(eventId);
 
-        log.trace("{} Found {} confirmd requests of event id={}", LocalDateTime.now(),
+        log.trace("{} Found {} confirmed requests of event id={}", LocalDateTime.now(),
                 confRequests, eventId);
 
         return confRequests;

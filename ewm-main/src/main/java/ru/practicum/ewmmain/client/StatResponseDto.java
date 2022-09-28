@@ -4,10 +4,11 @@ import lombok.*;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class StatResponseDto {
     private String app;
 
     private String uri;
 
-    private Long hits;
+    private Integer hits;
 }
