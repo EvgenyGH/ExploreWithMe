@@ -13,9 +13,9 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryDto {
-        @NotNull
-        @Min(0)
-        private Integer id;
-        @NotBlank
-        private String name;
+    @NotNull
+    @Min(0)
+    private Integer id;
+    @NotBlank
+    private String name;
 }

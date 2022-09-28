@@ -60,13 +60,13 @@ public class CompilationController {
 
     //Открепить подборку на главной странице.
     @DeleteMapping("/admin/compilations/{compId}/pin")
-    void unpinCompilation(@PathVariable @Min(0) Integer compId){
+    void unpinCompilation(@PathVariable @Min(0) Integer compId) {
         service.unpinCompilation(compId);
     }
 
     //Закрепить подборку на главной странице.
     @PatchMapping("/admin/compilations/{compId}/pin")
-    void pinCompilation(@PathVariable @Min(0) Integer compId){
+    void pinCompilation(@PathVariable @Min(0) Integer compId) {
         service.pinCompilation(compId);
     }
 

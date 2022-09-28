@@ -28,8 +28,8 @@ public class Compilation {
 
     @OneToMany
     @JoinTable(name = "compilation_event_connector",
-            joinColumns = @JoinColumn (name = "compilation_id"),
-            inverseJoinColumns = @JoinColumn (name = "event_id"))
+            joinColumns = @JoinColumn(name = "compilation_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id"))
     private List<Event> events;
 
     @Override

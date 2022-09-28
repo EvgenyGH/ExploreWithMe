@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Integer userId) {
-        User user = repository.findById(userId).orElseThrow(()-> new UserNotFoundException(
+        User user = repository.findById(userId).orElseThrow(() -> new UserNotFoundException(
                 String.format("User id=%d not found", userId)));
 
         log.trace("{} Found user id={} : {}", LocalDateTime.now(), userId, user);

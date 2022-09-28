@@ -43,7 +43,7 @@ public class EventDtoMapper {
 
     public static Event toEvent(EventNewDto eventNew, User initiator, Category category, Location location) {
         return new Event(null, eventNew.getAnnotation(), LocalDateTime.now(),
-                eventNew.getDescription(),eventNew.getEventDate(), initiator,
+                eventNew.getDescription(), eventNew.getEventDate(), initiator,
                 location, eventNew.getPaid(), eventNew.getParticipantLimit(), null,
                 eventNew.getRequestModeration(), State.PENDING, eventNew.getTitle(), category);
     }

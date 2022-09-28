@@ -51,12 +51,12 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
                         reqId, eventId, userId)));
         Event event = request.getEvent();
 
-        if (event.getParticipantLimit().equals(0) || !event.getRequestModeration()){
+        if (event.getParticipantLimit().equals(0) || !event.getRequestModeration()) {
             throw new OperationConditionViolationException(
                     "Confirmation of events without participation limits or pre-moderation not required");
         }
 
-        if (event.getParticipantLimit() <= getConfRequests(eventId)){
+        if (event.getParticipantLimit() <= getConfRequests(eventId)) {
             throw new OperationConditionViolationException(
                     String.format("Event id=%d participants limit reached", eventId));
         }
@@ -66,7 +66,7 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
 
         log.trace("{} Event id={} confirmed", LocalDateTime.now(), eventId);
 
-        if(event.getParticipantLimit().equals(getConfRequests(eventId))){
+        if (event.getParticipantLimit().equals(getConfRequests(eventId))) {
             repository.rejectNotConfirmed(eventId);
 
             log.trace("{} Participation limit reached. Not confirmed requests for event id={} rejected",

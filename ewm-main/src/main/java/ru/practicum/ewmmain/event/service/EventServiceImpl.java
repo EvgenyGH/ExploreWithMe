@@ -137,7 +137,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<CategoryDto> getCategories(Integer from, Integer size) {
         List<Category> categories = catRepository.findAll(
-                PageRequest.of(from / size, size, Direction.ASC, "name")).toList();
+                PageRequest.of(from / size, size)).toList();
 
         log.trace("{} Found {} categories: {}", LocalDateTime.now(), categories.size(), categories);
 
@@ -395,8 +395,8 @@ public class EventServiceImpl implements EventService {
         }
 
         if (event.getEventDate().minusHours(1).isBefore(LocalDateTime.now())) {
-            throw new ConstraintViolationException("Event has to start not earlier than 1 hour after publishing"
-                    , null);
+            throw new ConstraintViolationException("Event has to start not earlier than 1 hour after publishing",
+                    null);
         }
 
         return event;

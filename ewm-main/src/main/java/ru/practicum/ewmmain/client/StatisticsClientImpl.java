@@ -32,7 +32,8 @@ public class StatisticsClientImpl implements StatisticsClient {
     @Override
     public void sendStatistics(String ip, String uri) {
         StatRequestDto body = new StatRequestDto(0, "ewm", uri, ip, LocalDateTime.now());
-        makeRequest("/hit", body, HttpMethod.POST, null, new ParameterizedTypeReference<Object>() {});
+        makeRequest("/hit", body, HttpMethod.POST, null, new ParameterizedTypeReference<Object>() {
+        });
         log.trace("{} Statistics sent ip={} uri={}", LocalDateTime.now(), ip, uri);
     }
 
@@ -40,7 +41,8 @@ public class StatisticsClientImpl implements StatisticsClient {
     public Integer getViews(Integer eventId) {
         ResponseEntity<List<StatResponseDto>> response = makeRequest("/stats?uris={uris}", null,
                 HttpMethod.GET, Map.of("uris", "/events/" + eventId),
-                new ParameterizedTypeReference<List<StatResponseDto>>() {});
+                new ParameterizedTypeReference<List<StatResponseDto>>() {
+                });
         List<StatResponseDto> responseList = response.getBody();
         Integer hits = 0;
 

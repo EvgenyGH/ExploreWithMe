@@ -1,11 +1,11 @@
 package ru.practicum.ewmmain.event.model.category;
 
 public class CategoryDtoMapper {
-    public static CategoryDto toDto(Category category){
+    public static CategoryDto toDto(Category category) {
         return new CategoryDto(category.getId(), category.getName());
     }
 
-    public static Category toCategory(CategoryNewDto categoryNewDto){
+    public static Category toCategory(CategoryNewDto categoryNewDto) {
         return new Category(null, categoryNewDto.getName());
     }
 

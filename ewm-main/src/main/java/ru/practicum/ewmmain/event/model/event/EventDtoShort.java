@@ -9,7 +9,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
@@ -18,7 +17,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventDtoShort implements Serializable {
+public class EventDtoShort {
     @NotBlank
     @Size(max = 2000, min = 20)
     private String annotation;

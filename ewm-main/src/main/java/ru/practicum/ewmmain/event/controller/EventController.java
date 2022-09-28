@@ -98,7 +98,7 @@ public class EventController {
     //Добавление нового события.
     //Дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента.
     @PostMapping("/users/{userId}/events")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     EventDto addEvent(@RequestBody @Valid EventNewDto eventNew, @PathVariable @Min(0) Integer userId) {
         return service.addEvent(userId, eventNew);
     }

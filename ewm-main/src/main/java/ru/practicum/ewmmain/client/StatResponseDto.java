@@ -1,6 +1,8 @@
 package ru.practicum.ewmmain.client;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor

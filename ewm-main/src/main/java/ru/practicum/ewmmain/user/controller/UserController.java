@@ -30,8 +30,8 @@ public class UserController {
     //to - количество элементов в наборе
     @GetMapping("/users")
     List<UserDto> getUsers(@RequestParam(required = false) List<Integer> ids,
-                        @RequestParam(required = false, defaultValue = "0") @Min(0) Integer from,
-                        @RequestParam(required = false, defaultValue = "10") @Min(0) Integer size) {
+                           @RequestParam(required = false, defaultValue = "0") @Min(0) Integer from,
+                           @RequestParam(required = false, defaultValue = "10") @Min(0) Integer size) {
         return userService.getUsers(ids, from, size);
     }
 

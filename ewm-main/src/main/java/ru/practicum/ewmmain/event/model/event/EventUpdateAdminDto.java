@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventUpdateAdminDto extends EventUpdateDto{
+public class EventUpdateAdminDto extends EventUpdateDto {
     private String annotation;
 
     private Integer category;
