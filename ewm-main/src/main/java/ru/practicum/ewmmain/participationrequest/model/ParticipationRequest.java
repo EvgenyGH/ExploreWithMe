@@ -29,6 +29,7 @@ public class ParticipationRequest {
     private LocalDateTime created;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "requester_id")
     private User requester;
 
     @Enumerated(EnumType.STRING)

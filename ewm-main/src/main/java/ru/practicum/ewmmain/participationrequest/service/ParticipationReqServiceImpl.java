@@ -138,7 +138,7 @@ public class ParticipationReqServiceImpl implements ParticipationReqService {
         ParticipationRequest request = new ParticipationRequest(null, event, LocalDateTime.now(),
                 user, null);
 
-        if (!event.getRequestModeration() || event.getParticipantLimit().equals(0)) {
+        if (!event.getRequestModeration()) {
             request.setStatus(Status.CONFIRMED);
         } else {
             request.setStatus(Status.PENDING);

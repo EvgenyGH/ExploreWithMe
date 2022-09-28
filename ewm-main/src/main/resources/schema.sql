@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS participation_requests
     status            varchar(20) NOT NULL,
     event_id          bigint      NOT NULL
         constraint fk_event_id references events,
-    requester_user_id bigint      NOT NULL
+    requester_id bigint      NOT NULL
         constraint fk_requester_id references users
 );
 
