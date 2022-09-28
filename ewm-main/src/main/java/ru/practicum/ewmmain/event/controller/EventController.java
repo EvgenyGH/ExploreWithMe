@@ -39,10 +39,9 @@ public class EventController {
     //from - количество событий, которые нужно пропустить для формирования текущего набора
     //size - количество событий в наборе
     @GetMapping("/events")
-    // TODO: 28.09.2022
-    List<EventDtoShort> getEvents(@RequestParam @NotNull String text,
-                                  @RequestParam @NotNull List<Integer> categories,
-                                  @RequestParam @NotNull Boolean paid,
+    List<EventDtoShort> getEvents(@RequestParam(required = false) String text,
+                                  @RequestParam(required = false) List<Integer> categories,
+                                  @RequestParam(required = false) Boolean paid,
                                   @RequestParam(required = false)
                                   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
                                   LocalDateTime rangeStart,
@@ -118,7 +117,6 @@ public class EventController {
     }
 
     //Поиск событий.
-    // TODO: 28.09.2022
     @GetMapping("/admin/events")
     List<EventDto> getEventsAdmin(@RequestParam(name = "users", required = false) List<Integer> userIds,
                                   @RequestParam(required = false) List<State> states,

@@ -8,6 +8,8 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewmmain.client.StatisticsClient;
 import ru.practicum.ewmmain.event.controller.SortOption;
+import ru.practicum.ewmmain.event.exception.CategoryNotFoundException;
+import ru.practicum.ewmmain.event.exception.EventNotFoundException;
 import ru.practicum.ewmmain.event.model.category.Category;
 import ru.practicum.ewmmain.event.model.category.CategoryDto;
 import ru.practicum.ewmmain.event.model.category.CategoryDtoMapper;
@@ -18,8 +20,6 @@ import ru.practicum.ewmmain.event.model.location.LocationDtoMapper;
 import ru.practicum.ewmmain.event.repository.CategoryRepository;
 import ru.practicum.ewmmain.event.repository.EventRepository;
 import ru.practicum.ewmmain.event.repository.LocationRepository;
-import ru.practicum.ewmmain.event.exception.CategoryNotFoundException;
-import ru.practicum.ewmmain.event.exception.EventNotFoundException;
 import ru.practicum.ewmmain.exception.OperationConditionViolationException;
 import ru.practicum.ewmmain.participationrequest.service.ParticipationReqService;
 import ru.practicum.ewmmain.user.service.UserService;
@@ -29,7 +29,10 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -77,14 +80,17 @@ public class EventServiceImpl implements EventService {
                                          Boolean onlyAvailable, SortOption sort, Integer from, Integer size,
                                          String ip, String uri) {
 
-        if (rangeStart == null || rangeEnd == null) {
+        if (rangeStart == null) {
             rangeStart = LocalDateTime.now();
+        }
+
+        if (rangeEnd == null) {
             rangeEnd = LocalDateTime.now().plusYears(1000);
         }
 
         //Сортировка по возрастанию даты
-        List<Event> events = repository.getPublishedEvents(text.toLowerCase(), categories, paid, rangeStart,
-                rangeEnd, PageRequest.of(from / size, size, Direction.ASC,
+        List<Event> events = repository.getPublishedEvents(text != null ? text.toLowerCase() : null,
+                categories, paid, rangeStart, rangeEnd, PageRequest.of(from / size, size, Direction.ASC,
                         "eventDate"));
 
         List<EventDtoShort> eventsDto = events.stream().map(event -> EventDtoMapper.toDtoShort(event,
@@ -212,16 +218,15 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    // TODO: 28.09.2022
     public List<EventDto> getEventsAdmin(List<Integer> userIds, List<State> states,
                                          List<Integer> categoryIds, LocalDateTime rangeStart,
                                          LocalDateTime rangeEnd, Integer from, Integer size) {
 
-        if (rangeStart == null){
+        if (rangeStart == null) {
             rangeStart = LocalDateTime.now();
         }
 
-        if (rangeEnd == null){
+        if (rangeEnd == null) {
             rangeEnd = LocalDateTime.now().plusYears(1000);
         }
 

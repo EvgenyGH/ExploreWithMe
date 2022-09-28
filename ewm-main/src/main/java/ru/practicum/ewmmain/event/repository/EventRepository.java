@@ -1,6 +1,5 @@
 package ru.practicum.ewmmain.event.repository;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,13 +25,13 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     //Только опубликованные события.
     @Query(value = "SELECT e FROM Event e " +
-            "WHERE (lower(e.annotation) LIKE concat('%', ?1, '%') " +
-            "OR lower(e.description) LIKE concat('%', ?1, '%')) " +
-            "AND e.category.id IN ?2 " +
-            "AND e.paid = ?3 " +
-            "AND e.eventDate BETWEEN ?4 AND ?5 " +
+            "WHERE ((:text IS NULL OR lower(e.annotation) LIKE concat('%', :text, '%')) " +
+            "OR (:text IS NULL OR lower(e.description) LIKE concat('%', :text, '%'))) " +
+            "AND (coalesce(:categories, null) IS NULL OR e.category.id IN :categories) " +
+            "AND (coalesce(:paid, null) IS NULL OR e.paid = :paid) " +
+            "AND e.eventDate BETWEEN :rangeStart AND :rangeEnd " +
             "AND e.state = 'PUBLISHED'")
-    List<Event> getPublishedEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart,
-                                   LocalDateTime rangeEnd, PageRequest event_date);
-
+    List<Event> getPublishedEvents(@Param("text") String text, @Param("categories") List<Integer> categories,
+                                   @Param("paid") Boolean paid, @Param("rangeStart") LocalDateTime rangeStart,
+                                   @Param("rangeEnd") LocalDateTime rangeEnd, Pageable pageable);
 }
