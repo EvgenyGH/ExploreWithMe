@@ -5,7 +5,7 @@ services:
     container_name: "ewm-stats-server"
     build: ./ewm-stats
     ports:
-      - "9090"
+      - "9090:9090"
     depends_on:
       - db-stats
     environment:
