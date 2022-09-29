@@ -5,6 +5,7 @@
 
     <modules>
         <module>ewm-main</module>
+		<module>ewm-stats</module>
     </modules>
 
     <parent>
