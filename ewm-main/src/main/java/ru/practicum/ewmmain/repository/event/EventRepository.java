@@ -65,4 +65,43 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> getPublishedEvents(@Param("text") String text, @Param("categories") List<Integer> categories,
                                    @Param("paid") Boolean paid, @Param("rangeStart") LocalDateTime rangeStart,
                                    @Param("rangeEnd") LocalDateTime rangeEnd, Pageable pageable);
+
+
+
+
+    @Query(value = "SELECT e FROM Event e " +
+            "WHERE (:text IS NULL OR lower(e.annotation) LIKE concat('%', :text, '%')) " +
+            "AND (coalesce(:categories, null) IS NULL OR e.category.id IN :categories) " +
+            "AND (:paid IS NULL OR e.paid = :paid) " +
+            "AND e.eventDate BETWEEN :rangeStart AND :rangeEnd " +
+            "AND (:state IS NULL OR e.state = :state) " +
+            "AND function('distance', e.location.latitude, e.location.longitude, :lat, :long) <= :radius " +
+            "AND (e.participantLimit = 0 " +
+            "OR e.participantLimit > coalesce(" +
+            "(SELECT count(p.id) FROM ParticipationRequest p " +
+            "WHERE p.event.id = e.id " +
+            "AND p.status = 'CONFIRMED' " +
+            "GROUP BY p.event.id), 0)) " +
+            "ORDER BY e.eventDate ASC")
+    List<Event> getAvailEventsInLoc(@Param("state") State state, @Param("text") String text,
+                                    @Param("categories") List<Integer> categories, @Param("paid") Boolean paid,
+                                    @Param("rangeStart") LocalDateTime rangeStart,
+                                    @Param("rangeEnd") LocalDateTime rangeEnd, @Param("lat") Float latitude,
+                                    @Param("long") Float longitude, @Param("radius") Float radius,
+                                    Pageable pageable);
+
+    @Query(value = "SELECT e FROM Event e " +
+            "WHERE (:text IS NULL OR lower(e.annotation) LIKE concat('%', :text, '%')) " +
+            "AND (coalesce(:categories, null) IS NULL OR e.category.id IN :categories) " +
+            "AND (:paid IS NULL OR e.paid = :paid) " +
+            "AND e.eventDate BETWEEN :rangeStart AND :rangeEnd " +
+            "AND (:state IS NULL OR e.state = :state) " +
+            "AND function('distance', e.location.latitude, e.location.longitude, :lat, :long) <= :radius " +
+            "ORDER BY e.eventDate ASC")
+    List<Event> getEventsInLoc(@Param("state") State state, @Param("text") String text,
+                               @Param("categories") List<Integer> categories, @Param("paid") Boolean paid,
+                               @Param("rangeStart") LocalDateTime rangeStart,
+                               @Param("rangeEnd") LocalDateTime rangeEnd, @Param("lat") Float latitude,
+                               @Param("long") Float longitude, @Param("radius") Float radius,
+                               Pageable pageable);
 }

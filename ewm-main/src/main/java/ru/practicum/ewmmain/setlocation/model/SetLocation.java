@@ -15,6 +15,7 @@ import java.util.Objects;
 public class SetLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "loc_id")
     private Integer id;
 
     @Column(nullable = false, unique = true)
