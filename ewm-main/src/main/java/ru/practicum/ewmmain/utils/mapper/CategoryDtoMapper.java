@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.mapper;
+package ru.practicum.ewmmain.utils.mapper;
 
 import ru.practicum.ewmmain.model.event.category.Category;
 import ru.practicum.ewmmain.model.event.category.dto.CategoryDto;

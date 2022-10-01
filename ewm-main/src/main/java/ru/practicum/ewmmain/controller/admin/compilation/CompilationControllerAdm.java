@@ -13,46 +13,46 @@ import javax.validation.constraints.Min;
 @RestController
 @RequiredArgsConstructor
 @Validated
+@RequestMapping("/admin/compilations")
 public class CompilationControllerAdm {
     private final CompilationService service;
 
     //Добавление новой подборки.
     //compilationNewDto.pinned default = false.
-    @PostMapping("/admin/compilations")
+    @PostMapping
     CompilationDto addCompilation(@RequestBody @Valid CompilationNewDto compilationNewDto) {
         return service.addCompilation(compilationNewDto);
     }
 
     //Удаление подборки.
-    @DeleteMapping("/admin/compilations/{compId}")
+    @DeleteMapping("/{compId}")
     void deleteCompilation(@PathVariable @Min(0) Integer compId) {
         service.deleteCompilation(compId);
     }
 
     //Удалить событие из подборки.
-    @DeleteMapping("/admin/compilations/{compId}/events/{eventId}")
+    @DeleteMapping("/{compId}/events/{eventId}")
     void deleteCompilationEvent(@PathVariable @Min(0) Integer compId,
                                 @PathVariable @Min(0) Integer eventId) {
         service.deleteCompilationEvent(compId, eventId);
     }
 
     //Добавить событие в подборку.
-    @PatchMapping("/admin/compilations/{compId}/events/{eventId}")
+    @PatchMapping("/{compId}/events/{eventId}")
     void addCompilationEvent(@PathVariable @Min(0) Integer compId,
                              @PathVariable @Min(0) Integer eventId) {
         service.addCompilationEvent(compId, eventId);
     }
 
     //Открепить подборку на главной странице.
-    @DeleteMapping("/admin/compilations/{compId}/pin")
+    @DeleteMapping("/{compId}/pin")
     void unpinCompilation(@PathVariable @Min(0) Integer compId) {
         service.unpinCompilation(compId);
     }
 
     //Закрепить подборку на главной странице.
-    @PatchMapping("/admin/compilations/{compId}/pin")
+    @PatchMapping("/{compId}/pin")
     void pinCompilation(@PathVariable @Min(0) Integer compId) {
         service.pinCompilation(compId);
     }
-
 }

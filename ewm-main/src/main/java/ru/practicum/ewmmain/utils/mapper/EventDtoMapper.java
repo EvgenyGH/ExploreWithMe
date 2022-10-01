@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.mapper;
+package ru.practicum.ewmmain.utils.mapper;
 
 import ru.practicum.ewmmain.model.event.Event;
 import ru.practicum.ewmmain.model.event.State;

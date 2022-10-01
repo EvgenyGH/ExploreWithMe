@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.ewmmain.exception.user.UserNotFoundException;
 import ru.practicum.ewmmain.model.user.User;
 import ru.practicum.ewmmain.model.user.dto.UserDto;
-import ru.practicum.ewmmain.mapper.UserDtoMapper;
+import ru.practicum.ewmmain.utils.mapper.UserDtoMapper;
 import ru.practicum.ewmmain.model.user.dto.UserNewDto;
 import ru.practicum.ewmmain.repository.user.UserRepository;
 

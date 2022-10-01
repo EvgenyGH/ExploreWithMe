@@ -12,14 +12,14 @@ import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/users")
 @RequiredArgsConstructor
 @Validated
 public class UserControllerAdm {
     private final UserService userService;
 
     //Добавление нового пользователя
-    @PostMapping("/users")
+    @PostMapping
     UserDto addUser(@RequestBody @Valid UserNewDto userDto) {
         return userService.addUser(userDto);
     }
@@ -28,7 +28,7 @@ public class UserControllerAdm {
     //ids - id запрашиваемых пользователей
     //from - количество элементов, которые нужно пропустить для формирования текущего набора
     //to - количество элементов в наборе
-    @GetMapping("/users")
+    @GetMapping
     List<UserDto> getUsers(@RequestParam(required = false) List<Integer> ids,
                            @RequestParam(required = false, defaultValue = "0") @Min(0) Integer from,
                            @RequestParam(required = false, defaultValue = "10") @Min(0) Integer size) {
@@ -36,7 +36,7 @@ public class UserControllerAdm {
     }
 
     //Удаление пользователя
-    @DeleteMapping("/users/{userId}")
+    @DeleteMapping("/{userId}")
     void deleteUser(@PathVariable Integer userId) {
         userService.deleteUser(userId);
     }

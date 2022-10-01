@@ -19,11 +19,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Validated
+@RequestMapping("/admin")
 public class EventControllerAdm {
     private final EventService service;
 
     //Поиск событий.
-    @GetMapping("/admin/events")
+    @GetMapping("/events")
     List<EventDto> getEventsAdmin(@RequestParam(name = "users", required = false) List<Integer> userIds,
                                   @RequestParam(required = false) List<State> states,
                                   @RequestParam(required = false, name = "categories") List<Integer> categoryIds,
@@ -38,7 +39,7 @@ public class EventControllerAdm {
 
     //Редактирование события.
     //Валидация данных не требуется.
-    @PutMapping("/admin/events/{eventId}")
+    @PutMapping("/events/{eventId}")
     EventDto updateEventAdmin(@RequestBody EventUpdateAdminDto eventUpdate, @PathVariable Integer eventId) {
         return service.updateEventAdmin(eventId, eventUpdate);
     }
@@ -46,33 +47,33 @@ public class EventControllerAdm {
     //Публикация события.
     //Дата начала события должна быть не ранее чем за час от даты публикации.
     //Событие должно быть в состоянии ожидания публикации.
-    @PatchMapping("/admin/events/{eventId}/publish")
+    @PatchMapping("/events/{eventId}/publish")
     EventDto publishEvent(@PathVariable @Min(0) Integer eventId) {
         return service.publishEvent(eventId);
     }
 
     //Отклонение события.
     //Событие не должно быть опубликовано.
-    @PatchMapping("/admin/events/{eventId}/reject")
+    @PatchMapping("/events/{eventId}/reject")
     EventDto cancelEventAdmin(@PathVariable @Min(0) Integer eventId) {
         return service.cancelEventAdmin(eventId);
     }
 
     //Изменение категории.
-    @PatchMapping("/admin/categories")
+    @PatchMapping("/categories")
     CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
         return service.updateCategory(categoryDto);
     }
 
     //Добавление новой категории.
-    @PostMapping("/admin/categories")
+    @PostMapping("/categories")
     CategoryDto addCategory(@RequestBody @Valid CategoryNewDto categoryNewDto) {
         return service.addCategory(categoryNewDto);
     }
 
     //Удаление категории.
     //С категорией не должно быть связано ни одного события.
-    @DeleteMapping("/admin/categories/{catId}")
+    @DeleteMapping("/categories/{catId}")
     void deleteCategory(@PathVariable @Min(0) Integer catId) {
         service.deleteCategory(catId);
     }

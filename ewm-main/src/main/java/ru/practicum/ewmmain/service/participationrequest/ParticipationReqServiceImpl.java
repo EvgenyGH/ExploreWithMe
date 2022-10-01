@@ -8,7 +8,7 @@ import ru.practicum.ewmmain.model.event.State;
 import ru.practicum.ewmmain.service.event.EventService;
 import ru.practicum.ewmmain.exception.OperationConditionViolationException;
 import ru.practicum.ewmmain.exception.participationrequest.ParticipationRequestNotFoundException;
-import ru.practicum.ewmmain.mapper.PartReqDtoMapper;
+import ru.practicum.ewmmain.utils.mapper.PartReqDtoMapper;
 import ru.practicum.ewmmain.model.participationrequest.ParticipationRequest;
 import ru.practicum.ewmmain.model.participationrequest.dto.ParticipationRequestDto;
 import ru.practicum.ewmmain.model.participationrequest.Status;
