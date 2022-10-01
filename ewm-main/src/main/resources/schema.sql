@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS set_locations
     radius      real          NOT NULL
 );
 
-CREATE OR REPLACE FUNCTION distance(lat1 float, lon1 float, lat2 float, lon2 float, radius float)
+CREATE OR REPLACE FUNCTION distance(lat1 float, lon1 float, lat2 float, lon2 float)
     RETURNS float
 AS
 '
