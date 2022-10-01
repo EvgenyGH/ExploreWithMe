@@ -6,11 +6,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 
+/**
+ * Обработчик ошибок сервера статистики.
+ * @author Evgeny S
+ */
 @RestControllerAdvice("ru.practicum.ewmstats")
 @Slf4j
 public class StatsExceptionHandler {
 
-    //Сервис не возвращает сообщения об ошибках
+    /**
+     * Сервис статистики не возвращает сообщений об ошибках
+     */
     @ExceptionHandler
     void everyExceptionHandler(Exception exception) {
         log.warn("{} Exception:{} Message:{}", LocalDateTime.now(),

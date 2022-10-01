@@ -10,6 +10,10 @@ import ru.practicum.ewmstats.repository.StatsRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Реализация интерфейса {@link StatService}
+ * @author Evgeny S
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor

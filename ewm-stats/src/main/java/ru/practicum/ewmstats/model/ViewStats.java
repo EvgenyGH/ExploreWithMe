@@ -2,6 +2,10 @@ package ru.practicum.ewmstats.model;
 
 import lombok.*;
 
+/**
+ * Класс подборки статистической информации.
+ * @author Evgeny S
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -9,12 +13,18 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class ViewStats {
-    //Идентификатор сервиса для которого записывается информация.
+    /**
+     * Идентификатор сервиса обратившегося к ресурсу.
+     */
     private String app;
 
-    //URI для которого был осуществлен запрос.
+    /**
+     * URI по которому выполнено обращение к ресурсу.
+     */
     private String uri;
 
-    //Количество просмотров
+    /**
+     * Количество обращений к ресурсу
+     */
     private Long hits;
 }
