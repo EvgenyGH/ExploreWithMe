@@ -29,7 +29,7 @@ public class SetLocationDto {
     @NotNull
     @Min(-180)
     @Max(180)
-    private Float Longitude;
+    private Float longitude;
 
     @NotNull
     @PositiveOrZero
