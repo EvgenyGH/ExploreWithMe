@@ -48,6 +48,9 @@ public class SetLocationServiceImpl implements SetLocationService {
     @Override
     public SetLocationDto addLocation(SetLocationDto locationDto) {
         SetLocation location = SetLocDtoMapper.toSetLocation(locationDto);
+
+        location.setId(null);
+
         location = repository.save(location);
 
         log.trace("{} Set location id={} added : {}", LocalDateTime.now(), location.getId(), location);
