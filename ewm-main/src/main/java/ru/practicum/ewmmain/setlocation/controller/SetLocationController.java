@@ -4,58 +4,73 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewmmain.event.controller.SortOption;
-import ru.practicum.ewmmain.event.model.event.EventDtoShort;
-import ru.practicum.ewmmain.event.model.event.State;
+import ru.practicum.ewmmain.controller.client.event.SortOption;
+import ru.practicum.ewmmain.model.event.State;
+import ru.practicum.ewmmain.model.event.dto.EventDtoShort;
 import ru.practicum.ewmmain.setlocation.model.SetLocationDto;
 import ru.practicum.ewmmain.setlocation.service.SetLocationService;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Контроллер для работы с {@link ru.practicum.ewmmain.setlocation.model.SetLocation}.
+ *
+ * @author EvgenyS
+ * @see SetLocationControllerAdm
+ */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/location")
+@RequestMapping("/location")
 @Validated
 public class SetLocationController {
+    /**
+     * Сервис для работы с {@link ru.practicum.ewmmain.setlocation.model.SetLocation}
+     */
     private final SetLocationService service;
 
-    //Добавить новую локацию
-    @PostMapping
-    SetLocationDto addLocation(@RequestBody @Valid SetLocationDto locationDto) {
-        return service.addLocation(locationDto);
-    }
-
-    //Получить локацию по ИД
+    /**
+     * Получить локацию по id.
+     * @param locId id локации.
+     * @return возвращает локацию по id.
+     */
     @GetMapping("/{locId}")
     SetLocationDto getLocationById(@PathVariable @Min(1) Integer locId) {
         return service.getLocationById(locId);
     }
 
-    //Получить все локации
+    /**
+     * Получить все локации.
+     * @param from начальная позиция в полной выборке.
+     * @param size размер выборки.
+     * @return возвращает все локации.
+     */
     @GetMapping("/all")
     List<SetLocationDto> getAllLocations(@RequestParam(required = false, defaultValue = "0") @Min(0) Integer from,
                                          @RequestParam(required = false, defaultValue = "10") @Min(1) Integer size) {
         return service.getAllLocations(from, size);
     }
 
-    //Найти события в заданной локации
-    //Событие:
-    //Если не указана дата rangeStart возвращаются события позже текущей даты и времени;
-    //Если не указана дата rangeEnd возвращаются все события позже rangeStart;
-    //text - текст для поиска в содержимом аннотации и подробном описании события без учета регистра;
-    //sort - Вариант сортировки: по дате события или по количеству просмотров (EVENT_DATE, VIEWS);
-    //state - Статус события PENDING, PUBLISHED, CANCELED;
-    //categories - список идентификаторов категорий в которых будет вестись поиск;
-    //paid - поиск только платных/бесплатных событий;
-    //rangeStart - дата и время не раньше которых должно произойти событие;
-    //rangeEnd - дата и время не позже которых должно произойти событие;
-    //onlyAvailable - только события у которых не исчерпан лимит запросов на участие;
-    //from - количество событий, которые нужно пропустить для формирования текущего набора;
-    //size - количество событий в наборе;
+    /**
+     * Найти события в заданной локации с учетом фильтра.
+     * @param locId id локации.
+     * @param sort вариант сортировки: по дате события или по количеству просмотров (EVENT_DATE, VIEWS).
+     *             По умолчанию EVENT_DATE.
+     * @param state статус события: PENDING, PUBLISHED, CANCELED. Если null, то для любых статусов.
+     * @param text текст для поиска в содержимом аннотации и описании события. Поиск без учета регистра.
+     * @param categories список id категорий в которых будет вестись поиск. Если null, то по всем категориям.
+     * @param paid поиск только платных/бесплатных событий. Если null, то поиск без фильтра по полю paid.
+     * @param rangeStart дата и время не раньше которых должно произойти событие. Если не указана дата
+     *                   rangeStart, то возвращаются события позже текущей даты и времени.
+     * @param rangeEnd дата и время не позже которых должно произойти событие. Если не указана дата rangeEnd
+     *                 возвращаются все события позже rangeStart.
+     * @param onlyAvailable только события у которых не исчерпан лимит запросов на участие.
+     * @param from количество событий, которые нужно пропустить для формирования текущего набора.
+     * @param size количество событий в наборе.
+     * @return возвращает список событий {@link List}<{@link EventDtoShort}> с учетом фильтров.
+     */
     @GetMapping("/{locId}/event")
     List<EventDtoShort> getEventsInLocation(@PathVariable @Min(1) Integer locId,
                                             @RequestParam(name = "sort", required = false, defaultValue = "EVENT_DATE")
@@ -76,19 +91,4 @@ public class SetLocationController {
         return service.getEventsInLocation(locId, sort, state, text, categories, paid, rangeStart,
                 rangeEnd, onlyAvailable, from, size);
     }
-
-    //Обновить локацию по ИД
-    @PatchMapping("/{locId}")
-    SetLocationDto updateLocation(@RequestBody SetLocationDto locationDto,
-                                  @PathVariable @Min(1) Integer locId) {
-        return service.updateDto(locId, locationDto);
-    }
-
-    //Удалить локацию по ИД
-    @DeleteMapping("/{locId}")
-    void deleteLocation(@PathVariable @Min(1) Integer locId) {
-        service.deleteLocation(locId);
-    }
-
-
 }

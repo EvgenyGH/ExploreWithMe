@@ -9,8 +9,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.ewmmain.event.controller.SortOption;
-import ru.practicum.ewmmain.event.model.event.EventDtoShort;
+import ru.practicum.ewmmain.controller.client.event.SortOption;
+import ru.practicum.ewmmain.model.event.dto.EventDtoShort;
 import ru.practicum.ewmmain.setlocation.model.SetLocDtoMapper;
 import ru.practicum.ewmmain.setlocation.model.SetLocation;
 import ru.practicum.ewmmain.setlocation.model.SetLocationDto;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = {SetLocationController.class})
+@WebMvcTest(controllers = {SetLocationControllerAdm.class, SetLocationController.class})
 @ActiveProfiles("test")
 public class SetLocationControllerTest {
     @Autowired
@@ -140,7 +140,7 @@ public class SetLocationControllerTest {
     void whenGetLocationByIdThenCallSetLocationServiceGetLocationById() throws Exception {
         when(service.getLocationById(locationDto.getId())).thenReturn(locationDto);
 
-        mockMvc.perform(get("/admin/location/{locId}", locationDto.getId()))
+        mockMvc.perform(get("/location/{locId}", locationDto.getId()))
                 .andExpectAll(status().isOk(), content().json(mapper.writeValueAsString(locationDto)));
     }
 
@@ -148,7 +148,7 @@ public class SetLocationControllerTest {
     void whenGetLocationByIdInvalidIdThenGetStatusBadRequest() throws Exception {
         locationDto.setId(-1);
 
-        mockMvc.perform(get("/admin/location/{locId}", locationDto.getId()))
+        mockMvc.perform(get("/location/{locId}", locationDto.getId()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -156,7 +156,7 @@ public class SetLocationControllerTest {
     void whenAllLocationsThenCallSetLocationServiceGetAllLocations() throws Exception {
         when(service.getAllLocations(0, 10)).thenReturn(List.of(locationDto));
 
-        mockMvc.perform(get("/admin/location/all"))
+        mockMvc.perform(get("/location/all"))
                 .andExpectAll(status().isOk(), content().json(mapper.writeValueAsString(List.of(locationDto))));
     }
 
@@ -169,13 +169,13 @@ public class SetLocationControllerTest {
                 null, null, null, null, false, 0,
                 10)).thenReturn(dtos);
 
-        mockMvc.perform(get("/admin/location/{locId}/event", locationDto.getId()))
+        mockMvc.perform(get("/location/{locId}/event", locationDto.getId()))
                 .andExpectAll(status().isOk(), content().json(mapper.writeValueAsString(dtos)));
     }
 
     @Test
     void whenGetEventsInLocationWithInvalidLocIdThenGetStatusBadRequest() throws Exception {
-        mockMvc.perform(get("/admin/location/{locId}/event", 0))
+        mockMvc.perform(get("/location/{locId}/event", 0))
                 .andExpectAll(status().isBadRequest());
     }
 

@@ -8,8 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewmmain.event.model.event.Event;
-import ru.practicum.ewmmain.event.model.event.State;
+import ru.practicum.ewmmain.model.event.Event;
+import ru.practicum.ewmmain.model.event.State;
+import ru.practicum.ewmmain.repository.event.EventRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;

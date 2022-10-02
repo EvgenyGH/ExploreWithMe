@@ -3,19 +3,19 @@ package ru.practicum.ewmmain.setlocation.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewmmain.client.StatisticsClient;
-import ru.practicum.ewmmain.event.controller.SortOption;
-import ru.practicum.ewmmain.event.model.event.Event;
-import ru.practicum.ewmmain.event.model.event.EventDtoMapper;
-import ru.practicum.ewmmain.event.model.event.EventDtoShort;
-import ru.practicum.ewmmain.event.model.event.State;
-import ru.practicum.ewmmain.event.repository.EventRepository;
-import ru.practicum.ewmmain.participationrequest.service.ParticipationReqService;
+import ru.practicum.ewmmain.controller.client.event.SortOption;
+import ru.practicum.ewmmain.model.event.Event;
+import ru.practicum.ewmmain.model.event.State;
+import ru.practicum.ewmmain.model.event.dto.EventDtoShort;
+import ru.practicum.ewmmain.repository.event.EventRepository;
+import ru.practicum.ewmmain.service.participationrequest.ParticipationReqService;
 import ru.practicum.ewmmain.setlocation.exception.SetLocationNotFoundException;
 import ru.practicum.ewmmain.setlocation.model.SetLocDtoMapper;
 import ru.practicum.ewmmain.setlocation.model.SetLocation;
 import ru.practicum.ewmmain.setlocation.model.SetLocationDto;
 import ru.practicum.ewmmain.setlocation.repository.SetLocationRepository;
+import ru.practicum.ewmmain.utils.client.StatisticsClient;
+import ru.practicum.ewmmain.utils.mapper.EventDtoMapper;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -27,15 +27,44 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Релизация интерфейса {@link SetLocationService}
+ *
+ * @author Evgeny S
+ * @see SetLocationService
+ */
 @Slf4j
 @Service
 public class SetLocationServiceImpl implements SetLocationService {
+    /**
+     * Репозиторий для работы с сущностью {@link SetLocation}
+     */
     private final SetLocationRepository repository;
+    /**
+     * Репозиторий для работы с сущностью {@link Event}
+     */
     private final EventRepository eventRepository;
+    /**
+     * Репозиторий для работы с сущностью {@link ru.practicum.ewmmain.model.participationrequest.ParticipationRequest}
+     */
     private final ParticipationReqService reqService;
+    /**
+     * Клиент сервиса статистики.
+     */
     private final StatisticsClient client;
+    /**
+     * Стандартный валидатор.
+     */
     private final Validator validator;
 
+    /**
+     * Конструктор класса {@link SetLocationServiceImpl}
+     * @param repository Репозиторий для работы с сущностью {@link SetLocation}
+     * @param eventRepository Репозиторий для работы с сущностью {@link Event}
+     * @param reqService Репозиторий для работы с сущностью
+     * {@link ru.practicum.ewmmain.model.participationrequest.ParticipationRequest}
+     * @param client Клиент сервиса статистики.
+     */
     public SetLocationServiceImpl(SetLocationRepository repository, EventRepository eventRepository,
                                   ParticipationReqService reqService, StatisticsClient client) {
         this.repository = repository;
@@ -148,6 +177,11 @@ public class SetLocationServiceImpl implements SetLocationService {
         return SetLocDtoMapper.toDto(location);
     }
 
+    /**
+     * Обновить данные локации.
+     * @param location локация для обновления.
+     * @param locationDto новые данные.
+     */
     private void updateLocation(SetLocation location, SetLocationDto locationDto) {
         if (locationDto.getDescription() != null) {
             location.setDescription(locationDto.getDescription());
