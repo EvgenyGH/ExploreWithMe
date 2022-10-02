@@ -1,9 +1,10 @@
-package ru.practicum.ewmmain.controller.event;
+package ru.practicum.ewmmain.controller.admin.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewmmain.controller.client.event.EventController;
 import ru.practicum.ewmmain.model.event.State;
 import ru.practicum.ewmmain.model.event.category.dto.CategoryDto;
 import ru.practicum.ewmmain.model.event.category.dto.CategoryNewDto;
@@ -27,6 +28,9 @@ import java.util.List;
 @Validated
 @RequestMapping("/admin")
 public class EventControllerAdm {
+    /**
+     * Сервис для работы с событиями.
+     */
     private final EventService service;
 
     /**
@@ -59,7 +63,6 @@ public class EventControllerAdm {
      * @param eventId id обновляемого события.
      * @return возвращает обновленное событие {@link EventDto}.
      */
-    //
     @PutMapping("/events/{eventId}")
     EventDto updateEventAdmin(@RequestBody EventUpdateAdminDto eventUpdate, @PathVariable Integer eventId) {
         return service.updateEventAdmin(eventId, eventUpdate);
@@ -93,7 +96,6 @@ public class EventControllerAdm {
      * @param categoryDto данные для обновления категории.
      * @return возвращает обновленную категорию  {@link CategoryDto}.
      */
-    //
     @PatchMapping("/categories")
     CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
         return service.updateCategory(categoryDto);

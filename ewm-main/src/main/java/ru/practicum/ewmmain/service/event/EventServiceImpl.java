@@ -6,25 +6,27 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewmmain.utils.client.StatisticsClient;
-import ru.practicum.ewmmain.controller.event.SortOption;
+import ru.practicum.ewmmain.controller.client.event.SortOption;
+import ru.practicum.ewmmain.exception.OperationConditionViolationException;
 import ru.practicum.ewmmain.exception.event.CategoryNotFoundException;
 import ru.practicum.ewmmain.exception.event.EventNotFoundException;
-import ru.practicum.ewmmain.utils.mapper.EventDtoMapper;
+import ru.practicum.ewmmain.model.event.Event;
+import ru.practicum.ewmmain.model.event.State;
 import ru.practicum.ewmmain.model.event.category.Category;
 import ru.practicum.ewmmain.model.event.category.dto.CategoryDto;
-import ru.practicum.ewmmain.utils.mapper.CategoryDtoMapper;
 import ru.practicum.ewmmain.model.event.category.dto.CategoryNewDto;
 import ru.practicum.ewmmain.model.event.dto.*;
 import ru.practicum.ewmmain.model.event.location.Location;
-import ru.practicum.ewmmain.utils.mapper.LocationDtoMapper;
+import ru.practicum.ewmmain.model.user.User;
 import ru.practicum.ewmmain.repository.event.CategoryRepository;
 import ru.practicum.ewmmain.repository.event.EventRepository;
 import ru.practicum.ewmmain.repository.event.LocationRepository;
-import ru.practicum.ewmmain.exception.OperationConditionViolationException;
-import ru.practicum.ewmmain.model.event.*;
 import ru.practicum.ewmmain.service.participationrequest.ParticipationReqService;
 import ru.practicum.ewmmain.service.user.UserService;
+import ru.practicum.ewmmain.utils.client.StatisticsClient;
+import ru.practicum.ewmmain.utils.mapper.CategoryDtoMapper;
+import ru.practicum.ewmmain.utils.mapper.EventDtoMapper;
+import ru.practicum.ewmmain.utils.mapper.LocationDtoMapper;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -37,17 +39,52 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Реализация Интерфейса {@link EventService}
+ * @author Evgeny S
+ * @see ru.practicum.ewmmain.service.user.UserServiceImpl
+ */
 @Service
 @Slf4j
 public class EventServiceImpl implements EventService {
+    /**
+     * Сервис для работы с {@link User}
+     */
     private final UserService userService;
+    /**
+     * Репозиторий сущности {@link Event}
+     */
     private final EventRepository repository;
+    /**
+     * Репозиторий сущности {@link Category}
+     */
     private final CategoryRepository catRepository;
+    /**
+     * Репозиторий сущности {@link Location}
+     */
     private final LocationRepository locRepository;
+    /**
+     * Стандартный валидатор.
+     */
     private final Validator validator;
+    /**
+     * Клиент сервера статистики.
+     */
     private final StatisticsClient client;
+    /**
+     * Репозиторий сущности {@link ru.practicum.ewmmain.model.participationrequest.ParticipationRequest}
+     */
     private final ParticipationReqService reqService;
 
+    /**
+     * Конструктор сервиса.
+     * @param userService сервис для работы с {@link User}.
+     * @param repository репозиторий сущности {@link Event}.
+     * @param catRepository репозиторий сущности {@link Category}.
+     * @param locRepository репозиторий сущности {@link Location}.
+     * @param client клиент сервера статистики.
+     * @param reqService сервис для работы с {@link ru.practicum.ewmmain.model.participationrequest.ParticipationRequest}.
+     */
     @Autowired
     public EventServiceImpl(UserService userService, EventRepository repository, CategoryRepository catRepository,
                             LocationRepository locRepository, StatisticsClient client,
@@ -61,21 +98,6 @@ public class EventServiceImpl implements EventService {
         this.validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
-    //Получение событий с возможностью фильтрации.
-    //Только опубликованные события.
-    //Текстовый поиск по аннотации и описанию без учета регистра.
-    //Если не указаны даты [rangeStart-rangeEnd] возвращаются события позже текущей даты и времени.
-    //Информацию о запросе направляется в сервисе статистики.
-    //Параметры:
-    //text - текст для поиска в содержимом аннотации и подробном описании события;
-    //categories - список идентификаторов категорий в которых будет вестись поиск;
-    //paid - поиск только платных/бесплатных событий;
-    //rangeStart - дата и время не раньше которых должно произойти событие
-    //rangeEnd - дата и время не позже которых должно произойти событие
-    //onlyAvailable - только события у которых не исчерпан лимит запросов на участие
-    //sort - Вариант сортировки: по дате события или по количеству просмотров (EVENT_DATE, VIEWS)
-    //from - количество событий, которые нужно пропустить для формирования текущего набора
-    //size - количество событий в наборе
     @Override
     public List<EventDtoShort> getEvents(String text, List<Integer> categories, Boolean paid,
                                          LocalDateTime rangeStart, LocalDateTime rangeEnd,
@@ -168,9 +190,6 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
     }
 
-
-    //Изменить можно только отмененные события или события в состоянии ожидания модерации.
-    //Если редактируется отменённое событие, то оно переходит в состояние ожидания модерации.
     @Override
     public EventDto updateEvent(Integer userId, EventUpdateDto eventUpdate) {
         Event event = checkConditions(userId, eventUpdate.getEventId());
@@ -254,8 +273,6 @@ public class EventServiceImpl implements EventService {
         return EventDtoMapper.toDto(event, getConfRequests(event.getId()), getViews(event.getId()));
     }
 
-    //Дата начала события должна быть не ранее чем за час от даты публикации.
-    //Событие должно быть в состоянии ожидания публикации.
     @Override
     public EventDto publishEvent(Integer eventId) {
         Event event = checkPublishConditions(eventId);
@@ -317,14 +334,28 @@ public class EventServiceImpl implements EventService {
         return category;
     }
 
+    /**
+     * Получить количество просмотров события.
+     * @param eventId id события.
+     * @return возвращает количество просмотров события.
+     */
     protected Integer getViews(Integer eventId) {
         return client.getViews(eventId);
     }
 
+    /**
+     * Получить количество подтвержденных заявок на событие.
+     * @param eventId id события.
+     * @return возвращает количество подтвержденных заявок на событие.
+     */
     protected Integer getConfRequests(Integer eventId) {
         return reqService.getConfRequests(eventId);
     }
 
+    /**
+     * Проверить событие стандартным валидатором.
+     * @param event событие.
+     */
     protected void validateEvent(Event event) {
         Set<ConstraintViolation<Event>> violations = validator.validate(event);
         if (violations.size() > 0) {
@@ -332,6 +363,11 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    /**
+     * Обновить данные события.
+     * @param eventUpdate источник данных.
+     * @param event событие для обновления.
+     */
     protected void updateEventData(EventUpdateDto eventUpdate, Event event) {
         if (eventUpdate.getEventDate() != null) {
             event.setEventDate(eventUpdate.getEventDate());
@@ -366,6 +402,12 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    /**
+     * Проверить допустимость выполнения операции.
+     * @param userId id пользователя.
+     * @param eventId id события.
+     * @return возвращает событие с указанным id.
+     */
     protected Event checkConditions(Integer userId, Integer eventId) {
         Event event = checkConditionsAdm(eventId);
 
@@ -377,6 +419,11 @@ public class EventServiceImpl implements EventService {
         return event;
     }
 
+    /**
+     * Проверить допустимость выполнения операции для администратора.
+     * @param eventId id события.
+     * @return возвращает событие с указанным id.
+     */
     protected Event checkConditionsAdm(Integer eventId) {
         Event event = getEventById(eventId);
 
@@ -387,8 +434,11 @@ public class EventServiceImpl implements EventService {
         return event;
     }
 
-    //Дата начала события должна быть не ранее чем за час от даты публикации.
-    //Событие должно быть в состоянии ожидания публикации.
+    /**
+     * Проверить допустимость выполнения операции публикации.
+     * @param eventId id события.
+     * @return возвращает событие с указанным id.
+     */
     protected Event checkPublishConditions(Integer eventId) {
         Event event = getEventById(eventId);
 
@@ -415,6 +465,11 @@ public class EventServiceImpl implements EventService {
         return event;
     }
 
+    /**
+     * Обновить данные события ат администратора.
+     * @param eventUpdate источник данных.
+     * @param event событие для обновления.
+     */
     protected void updateEventDataAdm(EventUpdateAdminDto eventUpdate, Event event) {
         if (eventUpdate.getEventDate() != null) {
             event.setEventDate(eventUpdate.getEventDate());
@@ -456,6 +511,11 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    /**
+     * Отправить информацию об обращении к ресурсу на сервер статистики.
+     * @param ip ip адрес пользователя.
+     * @param uri uri ресурса.
+     */
     protected void sendStatistics(String ip, String uri) {
         client.sendStatistics(ip, uri);
     }

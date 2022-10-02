@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.controller.user;
+package ru.practicum.ewmmain.controller.admin.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -14,7 +14,6 @@ import java.util.List;
 /**
  * Закрытый контроллер пользователей({@link ru.practicum.ewmmain.model.user.User})
  * для администратора.
- *
  * @author Evgeny S
  */
 @RestController
@@ -22,15 +21,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class UserControllerAdm {
+    /**
+     * Сервис для работы с пользователями.
+     */
     private final UserService userService;
 
     /**
      * Добавление нового пользователя.
-     *
      * @param userDto данные для создания нового пользователя.
      * @return возвращает созданного пользователя {@link UserDto}.
      */
-    //
     @PostMapping
     UserDto addUser(@RequestBody @Valid UserNewDto userDto) {
         return userService.addUser(userDto);
@@ -38,7 +38,6 @@ public class UserControllerAdm {
 
     /**
      * Получение информации о пользователях.
-     *
      * @param ids  id запрашиваемых пользователей.
      * @param from количество элементов, которые нужно пропустить для формирования текущего набора.
      * @param size количество элементов в наборе.
@@ -53,7 +52,6 @@ public class UserControllerAdm {
 
     /**
      * Удаление пользователя
-     *
      * @param userId id пользователя.
      */
     @DeleteMapping("/{userId}")

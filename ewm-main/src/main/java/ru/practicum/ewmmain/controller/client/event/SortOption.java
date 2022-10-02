@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.controller.event;
+package ru.practicum.ewmmain.controller.client.event;
 
 /**
  * Варианты сортировки поиска.

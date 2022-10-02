@@ -6,31 +6,52 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewmmain.utils.client.StatisticsClient;
 import ru.practicum.ewmmain.exception.compilation.CompilationNotFoundException;
 import ru.practicum.ewmmain.model.compilation.Compilation;
 import ru.practicum.ewmmain.model.compilation.dto.CompilationDto;
-import ru.practicum.ewmmain.utils.mapper.CompilationDtoMapper;
 import ru.practicum.ewmmain.model.compilation.dto.CompilationNewDto;
-import ru.practicum.ewmmain.repository.compilation.CompilationRepository;
 import ru.practicum.ewmmain.model.event.Event;
-import ru.practicum.ewmmain.utils.mapper.EventDtoMapper;
+import ru.practicum.ewmmain.model.participationrequest.ParticipationRequest;
+import ru.practicum.ewmmain.repository.compilation.CompilationRepository;
 import ru.practicum.ewmmain.repository.event.EventRepository;
 import ru.practicum.ewmmain.service.event.EventService;
 import ru.practicum.ewmmain.service.participationrequest.ParticipationReqService;
+import ru.practicum.ewmmain.utils.client.StatisticsClient;
+import ru.practicum.ewmmain.utils.mapper.CompilationDtoMapper;
+import ru.practicum.ewmmain.utils.mapper.EventDtoMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Реализация Интерфейса {@link CompilationService}
+ * @author Evgeny S
+ * @see CompilationService
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class CompilationServiceImpl implements CompilationService {
+    /**
+     * Репозиторий сущности {@link Compilation}
+     */
     private final CompilationRepository repository;
+    /**
+     * Репозиторий сущности {@link Event}
+     */
     private final EventRepository eventRepository;
+    /**
+     * Сервис для работы с {@link Event}.
+     */
     private final EventService eventService;
+    /**
+     * Клиент сервиса статистики.
+     */
     private final StatisticsClient client;
+    /**
+     * Сервис для работы с {@link ParticipationRequest}.
+     */
     private final ParticipationReqService reqService;
 
 

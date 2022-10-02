@@ -15,10 +15,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Реализация Интерфейса {@link UserService}
+ * @author Evgeny S
+ * @see UserService
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
+    /**
+     * Репозиторий сущности {@link User}
+     */
     private final UserRepository repository;
 
     @Override

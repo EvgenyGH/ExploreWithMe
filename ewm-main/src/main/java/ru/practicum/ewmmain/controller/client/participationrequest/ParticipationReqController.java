@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.controller.participationrequest;
+package ru.practicum.ewmmain.controller.client.participationrequest;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +19,9 @@ import java.util.List;
 @RequestMapping("/users")
 @Validated
 public class ParticipationReqController {
+    /**
+     * Сервис для работы с заявками на участие в событии.
+     */
     private final ParticipationReqService service;
 
     /**
@@ -101,7 +104,6 @@ public class ParticipationReqController {
      * @param requestId id заявки.
      * @return возвращает отмененную заявку пользователя {@link ParticipationRequestDto}.
      */
-    //
     @PatchMapping("/{userId}/requests/{requestId}/cancel")
     ParticipationRequestDto cancelRequest(@PathVariable @Min(0) Integer userId,
                                           @PathVariable @Min(0) Integer requestId) {

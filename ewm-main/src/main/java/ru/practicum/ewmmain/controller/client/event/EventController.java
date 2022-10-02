@@ -1,10 +1,11 @@
-package ru.practicum.ewmmain.controller.event;
+package ru.practicum.ewmmain.controller.client.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewmmain.controller.admin.event.EventControllerAdm;
 import ru.practicum.ewmmain.model.event.category.dto.CategoryDto;
 import ru.practicum.ewmmain.model.event.dto.EventDto;
 import ru.practicum.ewmmain.model.event.dto.EventDtoShort;
@@ -29,6 +30,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class EventController {
+    /**
+     * Сервис для работы с событиями.
+     */
     private final EventService service;
 
     /**

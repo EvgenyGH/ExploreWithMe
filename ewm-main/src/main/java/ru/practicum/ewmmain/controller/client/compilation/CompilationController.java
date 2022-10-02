@@ -1,8 +1,9 @@
-package ru.practicum.ewmmain.controller.compilation;
+package ru.practicum.ewmmain.controller.client.compilation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewmmain.controller.admin.compilation.CompilationControllerAdm;
 import ru.practicum.ewmmain.model.compilation.dto.CompilationDto;
 import ru.practicum.ewmmain.service.compilation.CompilationService;
 
@@ -19,6 +20,9 @@ import java.util.List;
 @Validated
 @RequestMapping("/compilations")
 public class CompilationController {
+    /**
+     * Сервис для работы с подборками событий.
+     */
     private final CompilationService service;
 
     /**
