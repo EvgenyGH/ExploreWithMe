@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  ewm-stats:
+    container_name: "ewm-stats-server"
+    build: ./ewm-stats
+    ports:
+      - "9090:9090"
+    depends_on:
+      - db-stats
+    environment:
+      - DB_USER=ewm
+      - DB_PASSWORD=pwd
+      - DB_HOST=db-stats
+      - DB_PORT=5432
+      - DB_NAME=ewm-stats
+      - STATS_SERVER_PORT=9090
+
+  db-stats:
+    container_name: "ewm-stats-db"
+    image: postgres:11-alpine
+    ports:
+      - "5432"
+    volumes:
+      - ewm-stats-volume:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=pwd
+      - POSTGRES_USER=ewm
+      - POSTGRES_DB=ewm-stats
+
+volumes:
+  ewm-stats-volume:

@@ -3,7 +3,7 @@ version: '3.8'
 services:
   ewm-stats:
     container_name: "ewm-stats-server"
-    build: ./ewm-stats
+    build: ./../ewm-stats
     ports:
       - "9090:9090"
     depends_on:
@@ -30,7 +30,7 @@ services:
 
   ewm-main:
     container_name: "ewm-main-server"
-    build: ./ewm-main
+    build: .
     ports:
       - "8080:8080"
     depends_on:
