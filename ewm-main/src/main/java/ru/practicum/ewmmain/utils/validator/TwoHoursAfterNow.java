@@ -10,6 +10,12 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Аннотация для валидации даты и времени события.
+ * Дата и время не могут быть раньше, чем через два часа от текущего момента.
+ * @author Evgeny S
+ * @see EventDateValidator
+ */
 @Target({FIELD})
 @Retention(RUNTIME)
 @Constraint(validatedBy = EventDateValidator.class)

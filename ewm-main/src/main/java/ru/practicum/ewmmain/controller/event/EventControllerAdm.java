@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.controller.admin.event;
+package ru.practicum.ewmmain.controller.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,6 +16,12 @@ import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Закрытый контроллер событий({@link ru.practicum.ewmmain.model.event.Event})
+ * для администратора.
+ * @author Evgeny S
+ * @see EventController
+ */
 @RestController
 @RequiredArgsConstructor
 @Validated
@@ -23,7 +29,17 @@ import java.util.List;
 public class EventControllerAdm {
     private final EventService service;
 
-    //Поиск событий.
+    /**
+     * Поиск событий по фильтрам.
+     * @param userIds id пользователей.
+     * @param states состояния событий.
+     * @param categoryIds категории событий.
+     * @param rangeStart нижняя граница диапазона времени начала событий.
+     * @param rangeEnd верхняя граница диапазона времени начала событий.
+     * @param from начальный элемент выборки.
+     * @param size размер выборки.
+     * @return возвращает выборку событий {@link List}<{@link EventDto}> согласно фильтрам.
+     */
     @GetMapping("/events")
     List<EventDto> getEventsAdmin(@RequestParam(name = "users", required = false) List<Integer> userIds,
                                   @RequestParam(required = false) List<State> states,
@@ -37,42 +53,67 @@ public class EventControllerAdm {
         return service.getEventsAdmin(userIds, states, categoryIds, rangeStart, rangeEnd, from, size);
     }
 
-    //Редактирование события.
-    //Валидация данных не требуется.
+    /**
+     * Редактирование события администратором. Валидация данных не требуется.
+     * @param eventUpdate данные события для обновления.
+     * @param eventId id обновляемого события.
+     * @return возвращает обновленное событие {@link EventDto}.
+     */
+    //
     @PutMapping("/events/{eventId}")
     EventDto updateEventAdmin(@RequestBody EventUpdateAdminDto eventUpdate, @PathVariable Integer eventId) {
         return service.updateEventAdmin(eventId, eventUpdate);
     }
 
-    //Публикация события.
-    //Дата начала события должна быть не ранее чем за час от даты публикации.
-    //Событие должно быть в состоянии ожидания публикации.
+    /**
+     * Публикация события.
+     * Дата начала события должна быть не ранее чем за час от даты публикации.
+     * Событие должно быть в состоянии ожидания публикации.
+     * @param eventId id события.
+     * @return возвращает опубликованное событие {@link EventDto}.
+     */
     @PatchMapping("/events/{eventId}/publish")
     EventDto publishEvent(@PathVariable @Min(0) Integer eventId) {
         return service.publishEvent(eventId);
     }
 
-    //Отклонение события.
-    //Событие не должно быть опубликовано.
+    /**
+     * Отклонение события.
+     * Событие не должно быть опубликовано.
+     * @param eventId id события.
+     * @return возвращает отклоненное событие {@link EventDto}.
+     */
     @PatchMapping("/events/{eventId}/reject")
     EventDto cancelEventAdmin(@PathVariable @Min(0) Integer eventId) {
         return service.cancelEventAdmin(eventId);
     }
 
-    //Изменение категории.
+    /**
+     * Изменение категории.
+     * @param categoryDto данные для обновления категории.
+     * @return возвращает обновленную категорию  {@link CategoryDto}.
+     */
+    //
     @PatchMapping("/categories")
     CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
         return service.updateCategory(categoryDto);
     }
 
-    //Добавление новой категории.
+    /**
+     * Добавление новой категории.
+     * @param categoryNewDto данные для создания новой категории.
+     * @return возвращает созданную категорию {@link CategoryDto}.
+     */
     @PostMapping("/categories")
     CategoryDto addCategory(@RequestBody @Valid CategoryNewDto categoryNewDto) {
         return service.addCategory(categoryNewDto);
     }
 
-    //Удаление категории.
-    //С категорией не должно быть связано ни одного события.
+    /**
+     * Удаление категории.
+     * С категорией не должно быть связано ни одного события.
+     * @param catId Id категории для удаления.
+     */
     @DeleteMapping("/categories/{catId}")
     void deleteCategory(@PathVariable @Min(0) Integer catId) {
         service.deleteCategory(catId);

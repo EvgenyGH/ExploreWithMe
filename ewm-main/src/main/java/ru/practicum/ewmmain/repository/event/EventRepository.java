@@ -10,9 +10,29 @@ import ru.practicum.ewmmain.model.event.State;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Репозиторий класса {@link Event}
+ * @author Evgeny S
+ */
 public interface EventRepository extends JpaRepository<Event, Integer> {
+    /**
+     * Поиск события по id инициатора.
+     * @param initiatorId id инициатора события.
+     * @param pageable пагинация.
+     * @return возвращает список событий, инициированных заданным пользователем {@link List}<{@link Event}>.
+     */
     List<Event> findAllByInitiatorId(Integer initiatorId, Pageable pageable);
 
+    /**
+     * Получение подборки событий по фильтрам.
+     * @param userIds id пользователей.
+     * @param states состояния.
+     * @param categoryIds id категорий.
+     * @param rangeStart нижняя граница периода поиска.
+     * @param rangeEnd верхняя граница периода поиска.
+     * @param pageable пагинация.
+     * @return возвращает подборку событий в соответствии с заданными фильтрами {@link List}<{@link Event}>.
+     */
     @Query(value = "SELECT e FROM Event e " +
             "WHERE (coalesce(:userIds, null) IS NULL OR e.initiator.id IN :userIds) " +
             "AND (coalesce(:states, null) IS NULL OR e.state IN :states) " +
@@ -23,6 +43,17 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
                                @Param("rangeStart") LocalDateTime rangeStart,
                                @Param("rangeEnd") LocalDateTime rangeEnd, Pageable pageable);
 
+
+    /**
+     * Поиск только опубликованных событий с учетом фильтров.
+     * @param text поиск текста по полям annotation и description класса {@link Event}.
+     * @param categories id категорий.
+     * @param paid платные/бесплатные события.
+     * @param rangeStart нижняя граница периода поиска.
+     * @param rangeEnd верхняя граница периода поиска.
+     * @param pageable пагинация.
+     * @return возвращает подборку событий в соответствии с заданными фильтрами {@link List}<{@link Event}>.
+     */
     //Только опубликованные события.
     @Query(value = "SELECT e FROM Event e " +
             "WHERE ((:text IS NULL OR lower(e.annotation) LIKE concat('%', :text, '%')) " +

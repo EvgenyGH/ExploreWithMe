@@ -1,6 +1,6 @@
 package ru.practicum.ewmmain.service.event;
 
-import ru.practicum.ewmmain.controller.client.event.SortOption;
+import ru.practicum.ewmmain.controller.event.SortOption;
 import ru.practicum.ewmmain.model.event.category.Category;
 import ru.practicum.ewmmain.model.event.category.dto.CategoryDto;
 import ru.practicum.ewmmain.model.event.category.dto.CategoryNewDto;

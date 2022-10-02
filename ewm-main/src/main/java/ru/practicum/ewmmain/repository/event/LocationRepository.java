@@ -6,6 +6,10 @@ import ru.practicum.ewmmain.model.event.location.Location;
 
 import java.util.Optional;
 
+/**
+ * Репозиторий класса {@link Location}
+ * @author Evgeny S
+ */
 public interface LocationRepository extends JpaRepository<Location, Integer> {
     @Query(value = "SELECT l FROM Location l " +
             "WHERE l.latitude = ?1 " +

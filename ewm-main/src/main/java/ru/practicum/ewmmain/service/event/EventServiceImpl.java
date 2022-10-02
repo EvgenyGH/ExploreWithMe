@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewmmain.utils.client.StatisticsClient;
-import ru.practicum.ewmmain.controller.client.event.SortOption;
+import ru.practicum.ewmmain.controller.event.SortOption;
 import ru.practicum.ewmmain.exception.event.CategoryNotFoundException;
 import ru.practicum.ewmmain.exception.event.EventNotFoundException;
 import ru.practicum.ewmmain.utils.mapper.EventDtoMapper;

@@ -16,12 +16,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Реализация интерфейса {@link StatisticsClient}
+ * @author Evgeny S
+ * @see StatisticsClient
+ * @see StatRequestDto
+ * @see StatResponseDto
+ */
 @Component
 @Slf4j
 public class StatisticsClientImpl implements StatisticsClient {
     private final RestTemplate restTemplate;
     private final HttpHeaders defaultHeaders;
 
+    /**
+     * Конструктор клиента сервиса статистики.
+     * @param url url сервиса статистики (statistics.server.url).
+     */
     public StatisticsClientImpl(@Value("${statistics.server.url}") String url) {
         this.restTemplate = new RestTemplate();
         restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(url));
@@ -58,7 +69,15 @@ public class StatisticsClientImpl implements StatisticsClient {
     }
 
 
-    //Отправка REST запроса и получение ответа
+    /**
+     * Отправка REST запроса и получение ответа.
+     * @param statsUrl url запроса.
+     * @param body тело запроса.
+     * @param method http метод.
+     * @param params параметры запроса.
+     * @param type тип возвращаемого значения.
+     * @return возвращает ответ сервера {@link ResponseEntity}.
+     */
     protected <T, U> ResponseEntity<U> makeRequest(String statsUrl, T body, HttpMethod method,
                                                    Map<String, Object> params,
                                                    ParameterizedTypeReference<U> type) {

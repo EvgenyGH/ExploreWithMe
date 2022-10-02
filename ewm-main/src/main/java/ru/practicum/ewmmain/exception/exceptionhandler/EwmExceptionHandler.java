@@ -20,6 +20,10 @@ import ru.practicum.ewmmain.exception.user.UserNotFoundException;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 
+/**
+ * Обработчик ошибок модуля ewm-main.
+ * @author Evgeny S
+ */
 @RestControllerAdvice({"ru.practicum.ewmmain"})
 @Slf4j
 public class EwmExceptionHandler {
@@ -29,7 +33,15 @@ public class EwmExceptionHandler {
     private static final String NOT_FOUND_MSG = "The required object was not found";
     private static final String FORBIDDEN_MSG = "Only pending or canceled events can be changed";
 
-    //400 BAD_REQUEST Запрос составлен с ошибкой
+    /**
+     * Обработчик ошибочно составленных запросов.
+     * 400 BAD_REQUEST.
+     * @param exception одно из исключений:
+     *                  {@link ConstraintViolationException},
+     *                  {@link MethodArgumentTypeMismatchException},
+     *                  {@link MethodArgumentNotValidException}.
+     * @return возвращает сообщение об ошибке {@link ErrorResponse}.
+     */
     @ExceptionHandler({ConstraintViolationException.class, MethodArgumentTypeMismatchException.class,
             MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -45,6 +57,12 @@ public class EwmExceptionHandler {
         return response;
     }
 
+    /**
+     * Обработчик исключений о невыполнении условий для совершения операции.
+     * 403 FORBIDDEN.
+     * @param exception исключение {@link OperationConditionViolationException}.
+     * @return возвращает сообщение об ошибке {@link ErrorResponse}.
+     */
     //403 FORBIDDEN Не выполнены условия для совершения операции
     @ExceptionHandler({OperationConditionViolationException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -60,7 +78,17 @@ public class EwmExceptionHandler {
         return response;
     }
 
-    //404 NOT_FOUND Объект не найден
+    /**
+     * Обработчик исключений ресурс не найден.
+     * 404 NOT_FOUND.
+     * @param exception одно из исключений:  {@link EmptyResultDataAccessException},
+     *                  {@link CategoryNotFoundException},
+     *                  {@link UserNotFoundException},
+     *                  {@link ParticipationRequestNotFoundException},
+     *                  {@link CompilationNotFoundException},
+     *                  {@link EventNotFoundException}.
+     * @return возвращает сообщение об ошибке {@link ErrorResponse}.
+     */
     @ExceptionHandler({EmptyResultDataAccessException.class, CategoryNotFoundException.class,
             UserNotFoundException.class, ParticipationRequestNotFoundException.class,
             CompilationNotFoundException.class, EventNotFoundException.class})
@@ -77,7 +105,12 @@ public class EwmExceptionHandler {
         return response;
     }
 
-    //409 CONFLICT Запрос приводит к нарушению целостности данных
+    /**
+     * Обработчик исключений приводящих к нарушению целостности данных.
+     * 409 CONFLICT.
+     * @param exception исключение {@link DataIntegrityViolationException}.
+     * @return возвращает сообщение об ошибке {@link ErrorResponse}.
+     */
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     ErrorResponse conflictHandler(DataIntegrityViolationException exception) {
@@ -92,7 +125,12 @@ public class EwmExceptionHandler {
         return response;
     }
 
-    //500 INTERNAL_SERVER_ERROR Внутренняя ошибка сервера
+    /**
+     * Обработчик неизвестных исключений. Внутренняя ошибка сервера.
+     * 500 INTERNAL_SERVER_ERROR.
+     * @param exception исключение {@link Exception}.
+     * @return возвращает сообщение об ошибке {@link ErrorResponse}.
+     */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     ErrorResponse innerErrorHandler(Exception exception) {
