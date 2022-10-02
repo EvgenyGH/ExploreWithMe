@@ -6,7 +6,7 @@ package ru.practicum.ewmmain.exception.setlocation;
  *
  * @author Evgeny S
  */
-public class SetLocationNotFoundException extends RuntimeException{
+public class SetLocationNotFoundException extends RuntimeException {
     public SetLocationNotFoundException(String message) {
         super(message);
     }

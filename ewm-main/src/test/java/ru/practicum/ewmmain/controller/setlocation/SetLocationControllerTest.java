@@ -13,10 +13,10 @@ import ru.practicum.ewmmain.controller.admin.setlocation.SetLocationControllerAd
 import ru.practicum.ewmmain.controller.client.event.SortOption;
 import ru.practicum.ewmmain.controller.client.setlocation.SetLocationController;
 import ru.practicum.ewmmain.model.event.dto.EventDtoShort;
-import ru.practicum.ewmmain.utils.mapper.SetLocDtoMapper;
 import ru.practicum.ewmmain.model.setlocation.SetLocation;
 import ru.practicum.ewmmain.model.setlocation.dto.SetLocationDto;
 import ru.practicum.ewmmain.service.setlocation.SetLocationService;
+import ru.practicum.ewmmain.utils.mapper.SetLocDtoMapper;
 
 import java.util.List;
 
@@ -37,8 +37,8 @@ public class SetLocationControllerTest {
     private SetLocationDto locationDto;
 
     @BeforeEach
-    void initialize(){
-        SetLocation location =  new SetLocation(1, "name", "description",
+    void initialize() {
+        SetLocation location = new SetLocation(1, "name", "description",
                 10f, 20f, 1f);
         this.locationDto = SetLocDtoMapper.toDto(location);
     }
@@ -49,7 +49,7 @@ public class SetLocationControllerTest {
         when(service.addLocation(locationDto)).thenReturn(locationDto);
 
         mockMvc.perform(post("/admin/location").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(locationDto)))
+                        .content(mapper.writeValueAsString(locationDto)))
                 .andExpectAll(status().isOk(), content().json(mapper.writeValueAsString(locationDto)));
     }
 

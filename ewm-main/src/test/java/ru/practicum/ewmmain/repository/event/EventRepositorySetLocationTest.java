@@ -43,6 +43,6 @@ public class EventRepositorySetLocationTest {
                 10f, 10f, 2f, PageRequest.of(0, 10));
 
         assertThat(events.size()).isEqualTo(1);
-        assertThat(events).map(Event::getId).containsExactly( 8);
+        assertThat(events).map(Event::getId).containsExactly(8);
     }
 }

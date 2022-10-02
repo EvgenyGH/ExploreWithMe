@@ -50,7 +50,7 @@ public class SetLocation {
      * Долгота.
      */
     @Column(nullable = false)
-    private Float Longitude;
+    private Float longitude;
 
     /**
      * Радиус.
@@ -60,6 +60,7 @@ public class SetLocation {
 
     /**
      * Equals по полю {@link #id}.
+     *
      * @return Equals по полю {@link #id}.
      */
     @Override
@@ -74,6 +75,7 @@ public class SetLocation {
 
     /**
      * HashCode по полю {@link #id}.
+     *
      * @return HashCode по полю {@link #id}.
      */
     @Override

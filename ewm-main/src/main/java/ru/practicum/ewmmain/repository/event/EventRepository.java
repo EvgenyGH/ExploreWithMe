@@ -13,25 +13,28 @@ import java.util.List;
 
 /**
  * Репозиторий класса {@link Event}
+ *
  * @author Evgeny S
  */
 public interface EventRepository extends JpaRepository<Event, Integer> {
     /**
      * Поиск события по id инициатора.
+     *
      * @param initiatorId id инициатора события.
-     * @param pageable пагинация.
+     * @param pageable    пагинация.
      * @return возвращает список событий, инициированных заданным пользователем {@link List}<{@link Event}>.
      */
     List<Event> findAllByInitiatorId(Integer initiatorId, Pageable pageable);
 
     /**
      * Получение подборки событий по фильтрам.
-     * @param userIds id пользователей.
-     * @param states состояния.
+     *
+     * @param userIds     id пользователей.
+     * @param states      состояния.
      * @param categoryIds id категорий.
-     * @param rangeStart нижняя граница периода поиска.
-     * @param rangeEnd верхняя граница периода поиска.
-     * @param pageable пагинация.
+     * @param rangeStart  нижняя граница периода поиска.
+     * @param rangeEnd    верхняя граница периода поиска.
+     * @param pageable    пагинация.
      * @return возвращает подборку событий в соответствии с заданными фильтрами {@link List}<{@link Event}>.
      */
     @Query(value = "SELECT e FROM Event e " +
@@ -46,12 +49,13 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     /**
      * Поиск только опубликованных событий с учетом фильтров.
-     * @param text поиск текста по полям annotation и description класса {@link Event}.
+     *
+     * @param text       поиск текста по полям annotation и description класса {@link Event}.
      * @param categories id категорий.
-     * @param paid платные/бесплатные события.
+     * @param paid       платные/бесплатные события.
      * @param rangeStart нижняя граница периода поиска.
-     * @param rangeEnd верхняя граница периода поиска.
-     * @param pageable пагинация.
+     * @param rangeEnd   верхняя граница периода поиска.
+     * @param pageable   пагинация.
      * @return возвращает подборку событий в соответствии с заданными фильтрами {@link List}<{@link Event}>.
      */
     @Query(value = "SELECT e FROM Event e " +
@@ -67,16 +71,17 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     /**
      * Поиск доступных событий в локации {@link SetLocation}.
-     * @param state статус события: PENDING, PUBLISHED, CANCELED. Если null, то для любых статусов.
-     * @param text текст для поиска в содержимом аннотации и описании события. Поиск без учета регистра.
+     *
+     * @param state      статус события: PENDING, PUBLISHED, CANCELED. Если null, то для любых статусов.
+     * @param text       текст для поиска в содержимом аннотации и описании события. Поиск без учета регистра.
      * @param categories список id категорий в которых будет вестись поиск. Если null, то по всем категориям.
-     * @param paid поиск только платных/бесплатных событий. Если null, то поиск без фильтра по полю paid.
+     * @param paid       поиск только платных/бесплатных событий. Если null, то поиск без фильтра по полю paid.
      * @param rangeStart дата и время не раньше которых должно произойти событие.
-     * @param rangeEnd дата и время не позже которых должно произойти событие.
-     * @param latitude широта.
-     * @param longitude долгота.
-     * @param radius радиус локации.
-     * @param pageable пагинация.
+     * @param rangeEnd   дата и время не позже которых должно произойти событие.
+     * @param latitude   широта.
+     * @param longitude  долгота.
+     * @param radius     радиус локации.
+     * @param pageable   пагинация.
      * @return возвращает список событий {@link List}<{@link Event}> с учетом фильтров.
      */
     @Query(value = "SELECT e FROM Event e " +
@@ -102,16 +107,17 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     /**
      * Поиск событий в локации {@link SetLocation}.
-     * @param state статус события: PENDING, PUBLISHED, CANCELED. Если null, то для любых статусов.
-     * @param text текст для поиска в содержимом аннотации и описании события. Поиск без учета регистра.
+     *
+     * @param state      статус события: PENDING, PUBLISHED, CANCELED. Если null, то для любых статусов.
+     * @param text       текст для поиска в содержимом аннотации и описании события. Поиск без учета регистра.
      * @param categories список id категорий в которых будет вестись поиск. Если null, то по всем категориям.
-     * @param paid поиск только платных/бесплатных событий. Если null, то поиск без фильтра по полю paid.
+     * @param paid       поиск только платных/бесплатных событий. Если null, то поиск без фильтра по полю paid.
      * @param rangeStart дата и время не раньше которых должно произойти событие.
-     * @param rangeEnd дата и время не позже которых должно произойти событие.
-     * @param latitude широта.
-     * @param longitude долгота.
-     * @param radius радиус локации.
-     * @param pageable пагинация.
+     * @param rangeEnd   дата и время не позже которых должно произойти событие.
+     * @param latitude   широта.
+     * @param longitude  долгота.
+     * @param radius     радиус локации.
+     * @param pageable   пагинация.
      * @return возвращает список событий {@link List}<{@link Event}> с учетом фильтров.
      */
     @Query(value = "SELECT e FROM Event e " +

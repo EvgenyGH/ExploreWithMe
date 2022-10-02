@@ -4,18 +4,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewmmain.controller.client.event.SortOption;
+import ru.practicum.ewmmain.exception.setlocation.SetLocationNotFoundException;
 import ru.practicum.ewmmain.model.event.Event;
 import ru.practicum.ewmmain.model.event.State;
 import ru.practicum.ewmmain.model.event.dto.EventDtoShort;
-import ru.practicum.ewmmain.repository.event.EventRepository;
-import ru.practicum.ewmmain.service.participationrequest.ParticipationReqService;
-import ru.practicum.ewmmain.exception.setlocation.SetLocationNotFoundException;
-import ru.practicum.ewmmain.utils.mapper.SetLocDtoMapper;
 import ru.practicum.ewmmain.model.setlocation.SetLocation;
 import ru.practicum.ewmmain.model.setlocation.dto.SetLocationDto;
+import ru.practicum.ewmmain.repository.event.EventRepository;
 import ru.practicum.ewmmain.repository.setlocation.SetLocationRepository;
+import ru.practicum.ewmmain.service.participationrequest.ParticipationReqService;
 import ru.practicum.ewmmain.utils.client.StatisticsClient;
 import ru.practicum.ewmmain.utils.mapper.EventDtoMapper;
+import ru.practicum.ewmmain.utils.mapper.SetLocDtoMapper;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -59,11 +59,12 @@ public class SetLocationServiceImpl implements SetLocationService {
 
     /**
      * Конструктор класса {@link SetLocationServiceImpl}
-     * @param repository Репозиторий для работы с сущностью {@link SetLocation}
+     *
+     * @param repository      Репозиторий для работы с сущностью {@link SetLocation}
      * @param eventRepository Репозиторий для работы с сущностью {@link Event}
-     * @param reqService Репозиторий для работы с сущностью
-     * {@link ru.practicum.ewmmain.model.participationrequest.ParticipationRequest}
-     * @param client Клиент сервиса статистики.
+     * @param reqService      Репозиторий для работы с сущностью
+     *                        {@link ru.practicum.ewmmain.model.participationrequest.ParticipationRequest}
+     * @param client          Клиент сервиса статистики.
      */
     public SetLocationServiceImpl(SetLocationRepository repository, EventRepository eventRepository,
                                   ParticipationReqService reqService, StatisticsClient client) {
@@ -113,7 +114,7 @@ public class SetLocationServiceImpl implements SetLocationService {
                                                    Boolean onlyAvailable, Integer from, Integer size) {
 
         SetLocation location = repository.findById(locId).orElseThrow(
-                ()-> new SetLocationNotFoundException(String.format("Set location id=%d not found", locId)));
+                () -> new SetLocationNotFoundException(String.format("Set location id=%d not found", locId)));
 
         if (text == null) {
             text = "";
@@ -130,7 +131,7 @@ public class SetLocationServiceImpl implements SetLocationService {
         List<Event> events;
 
         //Только события у которых не исчерпан лимит запросов на участие
-        if (onlyAvailable){
+        if (onlyAvailable) {
             events = eventRepository.getAvailEventsInLoc(state, text.toLowerCase(), categories,
                     paid, rangeStart, rangeEnd, location.getLatitude(), location.getLongitude(),
                     location.getRadius(), PageRequest.of(from / size, size));
@@ -141,7 +142,7 @@ public class SetLocationServiceImpl implements SetLocationService {
         }
 
         List<EventDtoShort> eventsDto = events.stream().map(event -> EventDtoMapper.toDtoShort(event,
-                reqService.getConfRequests(event.getId()), client.getViews(event.getId())))
+                        reqService.getConfRequests(event.getId()), client.getViews(event.getId())))
                 .collect(Collectors.toList());
 
         //Сортировка событий по убыванию просмотров
@@ -150,7 +151,7 @@ public class SetLocationServiceImpl implements SetLocationService {
         }
 
         log.trace("{} Found {} events. locId={}, sort={}, text={}, categories={}, paid={}," +
-                "rangeStart={}, rangeEnd={}, onlyAvailable={}, from={}, size={}", LocalDateTime.now(),
+                        "rangeStart={}, rangeEnd={}, onlyAvailable={}, from={}, size={}", LocalDateTime.now(),
                 eventsDto.size(), locId, sort.name(), text, categories, paid, rangeStart, rangeEnd,
                 onlyAvailable, from, size);
 
@@ -179,7 +180,8 @@ public class SetLocationServiceImpl implements SetLocationService {
 
     /**
      * Обновить данные локации.
-     * @param location локация для обновления.
+     *
+     * @param location    локация для обновления.
      * @param locationDto новые данные.
      */
     private void updateLocation(SetLocation location, SetLocationDto locationDto) {
