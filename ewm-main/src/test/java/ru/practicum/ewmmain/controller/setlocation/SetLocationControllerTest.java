@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.setlocation.controller;
+package ru.practicum.ewmmain.controller.setlocation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,12 +9,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.ewmmain.controller.admin.setlocation.SetLocationControllerAdm;
 import ru.practicum.ewmmain.controller.client.event.SortOption;
+import ru.practicum.ewmmain.controller.client.setlocation.SetLocationController;
 import ru.practicum.ewmmain.model.event.dto.EventDtoShort;
-import ru.practicum.ewmmain.setlocation.model.SetLocDtoMapper;
-import ru.practicum.ewmmain.setlocation.model.SetLocation;
-import ru.practicum.ewmmain.setlocation.model.SetLocationDto;
-import ru.practicum.ewmmain.setlocation.service.SetLocationService;
+import ru.practicum.ewmmain.utils.mapper.SetLocDtoMapper;
+import ru.practicum.ewmmain.model.setlocation.SetLocation;
+import ru.practicum.ewmmain.model.setlocation.dto.SetLocationDto;
+import ru.practicum.ewmmain.service.setlocation.SetLocationService;
 
 import java.util.List;
 

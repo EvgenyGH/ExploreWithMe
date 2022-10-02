@@ -1,9 +1,10 @@
-package ru.practicum.ewmmain.setlocation.model;
+package ru.practicum.ewmmain.model.setlocation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import ru.practicum.ewmmain.model.setlocation.SetLocation;
 
 import javax.validation.constraints.*;
 

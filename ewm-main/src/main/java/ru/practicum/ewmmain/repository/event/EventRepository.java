@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.ewmmain.model.event.Event;
 import ru.practicum.ewmmain.model.event.State;
+import ru.practicum.ewmmain.model.setlocation.SetLocation;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -65,7 +66,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
                                    @Param("rangeEnd") LocalDateTime rangeEnd, Pageable pageable);
 
     /**
-     * Поиск доступных событий в локации {@link ru.practicum.ewmmain.setlocation.model.SetLocation}.
+     * Поиск доступных событий в локации {@link SetLocation}.
      * @param state статус события: PENDING, PUBLISHED, CANCELED. Если null, то для любых статусов.
      * @param text текст для поиска в содержимом аннотации и описании события. Поиск без учета регистра.
      * @param categories список id категорий в которых будет вестись поиск. Если null, то по всем категориям.
@@ -100,7 +101,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
                                     Pageable pageable);
 
     /**
-     * Поиск событий в локации {@link ru.practicum.ewmmain.setlocation.model.SetLocation}.
+     * Поиск событий в локации {@link SetLocation}.
      * @param state статус события: PENDING, PUBLISHED, CANCELED. Если null, то для любых статусов.
      * @param text текст для поиска в содержимом аннотации и описании события. Поиск без учета регистра.
      * @param categories список id категорий в которых будет вестись поиск. Если null, то по всем категориям.

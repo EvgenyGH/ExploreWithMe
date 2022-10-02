@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.setlocation.service;
+package ru.practicum.ewmmain.service.setlocation;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -9,11 +9,11 @@ import ru.practicum.ewmmain.model.event.State;
 import ru.practicum.ewmmain.model.event.dto.EventDtoShort;
 import ru.practicum.ewmmain.repository.event.EventRepository;
 import ru.practicum.ewmmain.service.participationrequest.ParticipationReqService;
-import ru.practicum.ewmmain.setlocation.exception.SetLocationNotFoundException;
-import ru.practicum.ewmmain.setlocation.model.SetLocDtoMapper;
-import ru.practicum.ewmmain.setlocation.model.SetLocation;
-import ru.practicum.ewmmain.setlocation.model.SetLocationDto;
-import ru.practicum.ewmmain.setlocation.repository.SetLocationRepository;
+import ru.practicum.ewmmain.exception.setlocation.SetLocationNotFoundException;
+import ru.practicum.ewmmain.utils.mapper.SetLocDtoMapper;
+import ru.practicum.ewmmain.model.setlocation.SetLocation;
+import ru.practicum.ewmmain.model.setlocation.dto.SetLocationDto;
+import ru.practicum.ewmmain.repository.setlocation.SetLocationRepository;
 import ru.practicum.ewmmain.utils.client.StatisticsClient;
 import ru.practicum.ewmmain.utils.mapper.EventDtoMapper;
 

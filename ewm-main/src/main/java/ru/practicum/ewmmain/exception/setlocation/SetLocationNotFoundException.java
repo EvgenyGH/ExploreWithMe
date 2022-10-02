@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.setlocation.exception;
+package ru.practicum.ewmmain.exception.setlocation;
 
 /**
  * Локация не найдена.

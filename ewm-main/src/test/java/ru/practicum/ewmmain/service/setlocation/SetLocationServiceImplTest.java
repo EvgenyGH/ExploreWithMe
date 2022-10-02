@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.setlocation.service;
+package ru.practicum.ewmmain.service.setlocation;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,19 +9,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import ru.practicum.ewmmain.controller.client.event.SortOption;
+import ru.practicum.ewmmain.exception.setlocation.SetLocationNotFoundException;
 import ru.practicum.ewmmain.model.event.Event;
 import ru.practicum.ewmmain.model.event.State;
 import ru.practicum.ewmmain.model.event.category.Category;
+import ru.practicum.ewmmain.model.setlocation.SetLocation;
+import ru.practicum.ewmmain.model.setlocation.dto.SetLocationDto;
 import ru.practicum.ewmmain.model.user.User;
 import ru.practicum.ewmmain.repository.event.EventRepository;
+import ru.practicum.ewmmain.repository.setlocation.SetLocationRepository;
 import ru.practicum.ewmmain.service.participationrequest.ParticipationReqService;
-import ru.practicum.ewmmain.setlocation.exception.SetLocationNotFoundException;
-import ru.practicum.ewmmain.setlocation.model.SetLocDtoMapper;
-import ru.practicum.ewmmain.setlocation.model.SetLocation;
-import ru.practicum.ewmmain.setlocation.model.SetLocationDto;
-import ru.practicum.ewmmain.setlocation.repository.SetLocationRepository;
 import ru.practicum.ewmmain.utils.client.StatisticsClient;
 import ru.practicum.ewmmain.utils.mapper.EventDtoMapper;
+import ru.practicum.ewmmain.utils.mapper.SetLocDtoMapper;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,16 +1,18 @@
-package ru.practicum.ewmmain.setlocation.controller;
+package ru.practicum.ewmmain.controller.admin.setlocation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewmmain.setlocation.model.SetLocationDto;
-import ru.practicum.ewmmain.setlocation.service.SetLocationService;
+import ru.practicum.ewmmain.controller.client.setlocation.SetLocationController;
+import ru.practicum.ewmmain.model.setlocation.SetLocation;
+import ru.practicum.ewmmain.model.setlocation.dto.SetLocationDto;
+import ru.practicum.ewmmain.service.setlocation.SetLocationService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
 /**
- * Контроллер для работы с {@link ru.practicum.ewmmain.setlocation.model.SetLocation}.
+ * Контроллер для работы с {@link SetLocation}.
  * Только для администратора.
  *
  * @author EvgenyS
@@ -22,7 +24,7 @@ import javax.validation.constraints.Min;
 @Validated
 public class SetLocationControllerAdm {
     /**
-     * Сервис для работы с {@link ru.practicum.ewmmain.setlocation.model.SetLocation}
+     * Сервис для работы с {@link SetLocation}
      */
     private final SetLocationService service;
 

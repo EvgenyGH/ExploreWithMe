@@ -1,15 +1,16 @@
-package ru.practicum.ewmmain.setlocation.service;
+package ru.practicum.ewmmain.service.setlocation;
 
 import ru.practicum.ewmmain.controller.client.event.SortOption;
 import ru.practicum.ewmmain.model.event.State;
 import ru.practicum.ewmmain.model.event.dto.EventDtoShort;
-import ru.practicum.ewmmain.setlocation.model.SetLocationDto;
+import ru.practicum.ewmmain.model.setlocation.SetLocation;
+import ru.practicum.ewmmain.model.setlocation.dto.SetLocationDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Интерфейс для работы с {@link ru.practicum.ewmmain.setlocation.model.SetLocation}
+ * Интерфейс для работы с {@link SetLocation}
  *
  * @author Evgeny S
  * @see SetLocationServiceImpl

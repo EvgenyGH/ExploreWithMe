@@ -1,6 +1,7 @@
-package ru.practicum.ewmmain.setlocation.model;
+package ru.practicum.ewmmain.model.setlocation;
 
 import lombok.*;
+import ru.practicum.ewmmain.model.setlocation.dto.SetLocationDto;
 
 import javax.persistence.*;
 import java.util.Objects;

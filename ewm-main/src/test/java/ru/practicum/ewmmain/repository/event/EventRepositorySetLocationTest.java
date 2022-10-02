@@ -1,4 +1,4 @@
-package ru.practicum.ewmmain.event.repository;
+package ru.practicum.ewmmain.repository.event;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewmmain.model.event.Event;
 import ru.practicum.ewmmain.model.event.State;
-import ru.practicum.ewmmain.repository.event.EventRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;

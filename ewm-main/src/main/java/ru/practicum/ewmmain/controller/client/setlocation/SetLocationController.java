@@ -1,14 +1,16 @@
-package ru.practicum.ewmmain.setlocation.controller;
+package ru.practicum.ewmmain.controller.client.setlocation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewmmain.controller.admin.setlocation.SetLocationControllerAdm;
 import ru.practicum.ewmmain.controller.client.event.SortOption;
 import ru.practicum.ewmmain.model.event.State;
 import ru.practicum.ewmmain.model.event.dto.EventDtoShort;
-import ru.practicum.ewmmain.setlocation.model.SetLocationDto;
-import ru.practicum.ewmmain.setlocation.service.SetLocationService;
+import ru.practicum.ewmmain.model.setlocation.SetLocation;
+import ru.practicum.ewmmain.model.setlocation.dto.SetLocationDto;
+import ru.practicum.ewmmain.service.setlocation.SetLocationService;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -16,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Контроллер для работы с {@link ru.practicum.ewmmain.setlocation.model.SetLocation}.
+ * Контроллер для работы с {@link SetLocation}.
  *
  * @author EvgenyS
  * @see SetLocationControllerAdm
@@ -27,7 +29,7 @@ import java.util.List;
 @Validated
 public class SetLocationController {
     /**
-     * Сервис для работы с {@link ru.practicum.ewmmain.setlocation.model.SetLocation}
+     * Сервис для работы с {@link SetLocation}
      */
     private final SetLocationService service;
 

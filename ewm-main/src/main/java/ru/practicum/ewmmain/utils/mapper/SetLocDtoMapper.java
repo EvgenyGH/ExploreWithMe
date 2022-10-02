@@ -1,4 +1,7 @@
-package ru.practicum.ewmmain.setlocation.model;
+package ru.practicum.ewmmain.utils.mapper;
+
+import ru.practicum.ewmmain.model.setlocation.SetLocation;
+import ru.practicum.ewmmain.model.setlocation.dto.SetLocationDto;
 
 /**
  * Маппер {@link SetLocationDto} / {@link SetLocation}.
