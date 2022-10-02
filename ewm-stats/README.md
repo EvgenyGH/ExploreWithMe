@@ -8,7 +8,7 @@
 Запускается на 9090 порту.  
 [API (swagger)](./ewm-stats-service-spec.json)
 
-#### _Используемые технологии:_
+#### _Используемые технологии_
 
 Spring-Boot(2.7.1), jpa, postgresql(42.5.0), java-core(jdk 11), lombok(1.18.24),
 docker(20.10.17), docker-compose(2.10.2).
