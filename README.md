@@ -27,7 +27,7 @@ docker(20.10.17), docker-compose(2.10.2).
 2. Сервис статистики — хранит количество просмотров и позволяет делать различные
    выборки для анализа работы приложения. Запускается на 9090 порту.  
    [ewm-stats](./ewm-stats/README.md)  
-   [API (swagger)](https://petstore.swagger.io?url=https://raw.githubusercontent.com/EvgenyGH/java-explore-with-me/main/ewm-stats/ewm-stats-service-spec.json)
+   [API (swagger)](https://petstore.swagger.io?url=https://raw.githubusercontent.com/EvgenyGH/java-explore-with-me/feachure_set_locations/ewm-stats/ewm-stats-service-spec.yaml)
 
 Каждый из сервисов работает со своей базой данных postgres.
 
