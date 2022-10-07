@@ -7,6 +7,7 @@
 выборки для анализа работы приложения [ewm](./../README.md).  
 Запускается на 9090 порту.  
 [API (swagger)](https://petstore.swagger.io?url=https://raw.githubusercontent.com/EvgenyGH/java-explore-with-me/main/ewm-stats/ewm-stats-service-spec.json)
+[API (swagger)](https://petstore.swagger.io?url=./ewm-stats/ewm-stats-service-spec.json)
 
 #### _Используемые технологии_
 

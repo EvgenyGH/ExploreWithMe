@@ -22,7 +22,7 @@ docker(20.10.17), docker-compose(2.10.2).
 1. Основной сервис — содержит всё необходимое для работы продукта.  
    Запускается на 8080 порту.  
    [ewm-main](./ewm-main/README.md)  
-   [API (swagger)](https://petstore.swagger.io?url=https://raw.githubusercontent.com/EvgenyGH/java-explore-with-me/main/ewm-main/ewm-main-service-spec.json)
+   [API (swagger)](https://petstore.swagger.io?url=https://raw.githubusercontent.com/EvgenyGH/java-explore-with-me/feachure_set_locations/ewm-main/ewm-main-service-spec.yaml)
 
 2. Сервис статистики — хранит количество просмотров и позволяет делать различные
    выборки для анализа работы приложения. Запускается на 9090 порту.  
