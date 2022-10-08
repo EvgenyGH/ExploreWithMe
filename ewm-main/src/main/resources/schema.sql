@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS users, events, locations, categories, compilations, participation_requests,
-    compilation_event_connector, set_locations CASCADE;
+--DROP TABLE IF EXISTS users, events, locations, categories, compilations, participation_requests,
+--    compilation_event_connector, set_locations CASCADE;
 
 CREATE TABLE IF NOT EXISTS categories
 (

@@ -1,4 +1,4 @@
-INSERT INTO public.users (user_id, email, name)
+INSERT INTO users (user_id, email, name)
 VALUES (1, 'email1@bk.ru', 'name1'),
        (2, 'email2@bl.ru', 'name2');
 
@@ -17,7 +17,7 @@ VALUES (1, 'set town', 10, 10, 'test', 1),
        (2, 'set town2', 30, 30, 'test2', 1);
 
 
-INSERT INTO public.events (event_id, annotation, created, description, event_date, paid,
+INSERT INTO events (event_id, annotation, created, description, event_date, paid,
                            participant_limit, published, request_moderation, state, title,
                            category_id, initiator_id, location_id)
 VALUES (1, 'annotation1 LooKing FoR IT', '2022-10-01 19:18:19.000000', 'description1', '2023-10-01 19:18:26.000000',
