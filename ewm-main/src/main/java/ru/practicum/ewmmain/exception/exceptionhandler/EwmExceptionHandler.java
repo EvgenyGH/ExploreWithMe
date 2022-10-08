@@ -31,7 +31,7 @@ public class EwmExceptionHandler {
     private static final String INTERNAL_ERROR_MSG = "Error occurred";
     private static final String BAD_REQUEST_MSG = "Bad request";
     private static final String NOT_FOUND_MSG = "The required object was not found";
-    private static final String FORBIDDEN_MSG = "Only pending or canceled events can be changed";
+    private static final String FORBIDDEN_MSG = "Operation conditions violated";
 
     /**
      * Обработчик ошибочно составленных запросов.

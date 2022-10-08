@@ -1,11 +1,10 @@
 # _Explore with me (EWM)_
 ## Основной сервис (EWM-MAIN)
-
 #### _Описание_
 Основной сервис — содержит всё необходимое для работы продукта.  
 Запускается на 8080 порту.
 Запускается только после запуска сервиса [ewm-stats](./../ewm-stats/README.md).  
-[API (swagger)](./ewm-main-service-spec.json)
+[API (swagger)](https://petstore.swagger.io?url=https://raw.githubusercontent.com/EvgenyGH/java-explore-with-me/feachure_set_locations/ewm-main/ewm-main-service-spec.yaml)
 
 #### _Используемые технологии_
 

@@ -1,0 +1,29 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:postgresql:11-alpine:///ewn
+    password: pwd
+    username: ewm
+
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate:
+        show_sql: false
+    generate-ddl: false
+
+  sql:
+    init:
+      mode: always
+
+logging:
+  level:
+    ru:
+      practicum:
+        ewmmain: trace
+
+statistics:
+  server:
+    url: http://localhost:9090

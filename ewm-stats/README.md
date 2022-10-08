@@ -6,7 +6,7 @@
 Сервис статистики — хранит количество просмотров и позволяет делать различные
 выборки для анализа работы приложения [ewm](./../README.md).  
 Запускается на 9090 порту.  
-[API (swagger)](./ewm-stats-service-spec.json)
+[API (swagger)](https://petstore.swagger.io?url=https://raw.githubusercontent.com/EvgenyGH/java-explore-with-me/feachure_set_locations/ewm-stats/ewm-stats-service-spec.yaml)
 
 #### _Используемые технологии_
 

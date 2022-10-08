@@ -1,7 +1,5 @@
 # _Explore with me (EWM)_
 
-[Pull request](https://github.com/EvgenyGH/java-explore-with-me/pull/1#issue-1389903249)
-
 #### _Описание_
 
 Приложение дает возможность делиться информацией об интересных событиях и помогать найти компанию для участия в них.
@@ -22,12 +20,12 @@ docker(20.10.17), docker-compose(2.10.2).
 1. Основной сервис — содержит всё необходимое для работы продукта.  
    Запускается на 8080 порту.  
    [ewm-main](./ewm-main/README.md)  
-   [API (swagger)](./ewm-main/ewm-main-service-spec.json)
+   [API (swagger)](https://petstore.swagger.io?url=https://raw.githubusercontent.com/EvgenyGH/java-explore-with-me/feachure_set_locations/ewm-main/ewm-main-service-spec.yaml)
 
 2. Сервис статистики — хранит количество просмотров и позволяет делать различные
    выборки для анализа работы приложения. Запускается на 9090 порту.  
    [ewm-stats](./ewm-stats/README.md)  
-   [API (swagger)](./ewm-stats/ewm-stats-service-spec.json)
+   [API (swagger)](https://petstore.swagger.io?url=https://raw.githubusercontent.com/EvgenyGH/java-explore-with-me/feachure_set_locations/ewm-stats/ewm-stats-service-spec.yaml)
 
 Каждый из сервисов работает со своей базой данных postgres.
 
@@ -41,6 +39,7 @@ ER:
 _`docker-compose -p ewm up`_
 
 Порядок запуска в ручном режиме:
+
 1. Запустить сервис статистики.  
    1.1. Установить переменные среды.  
    1.2. Запустить базу данных сервиса статистики.  
@@ -52,6 +51,7 @@ _`docker-compose -p ewm up`_
 
 _Переменные среды для сервисов и их значения по
 умолчанию в docker-compose:_
+
 1. Сервис статистики:
     - DB_USER=ewm
     - DB_PASSWORD=pwd
